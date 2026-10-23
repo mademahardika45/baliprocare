@@ -1,0 +1,37 @@
+---
+// Tall Healix-style service card: photo on top fading into a mist panel with the text.
+// All four services use this same look.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { photo, alts } from '../lib/photos';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { service: CollectionEntry<'services'>; delay?: number }
+const { service, delay = 0 } = Astro.props;
+const s = service.data;
+const href = `/services/${service.id}`;
+const sizes = '(min-width:1024px) 25vw, (min-width:640px) 50vw, 90vw';
+---
+<article
+  class="group relative isolate flex min-h-[500px] flex-col overflow-hidden rounded-[var(--radius-card)] p-5 sm:min-h-[540px] sm:p-6"
+  data-reveal={delay}
+>
+  <Image src={photo(s.cover)} alt={alts[s.cover] ?? ''} widths={[400, 700, 900]} sizes={sizes} class="absolute inset-x-0 top-0 -z-20 h-[62%] w-full object-cover transition duration-[1.2s] ease-out group-hover:scale-105" />
+  <div class="absolute inset-0 -z-10 bg-[linear-gradient(180deg,transparent_0%,transparent_30%,rgba(205,232,229,.85)_52%,#CDE8E5_62%,#DDEFEE_100%)]"></div>
+
+  <div class="flex items-start justify-between gap-3">
+    <span class="grid size-12 place-items-center rounded-full glass text-deep"><Icon name={s.icon} class="size-[22px]" /></span>
+    <span class="chip chip-white">{s.name}</span>
+  </div>
+  <h3 class="mt-auto text-[2rem] leading-[1.02] font-medium tracking-[-0.045em] text-deep sm:text-[2.2rem]">{s.tagline}</h3>
+  <ul class="mt-4 grid gap-2 text-[15px] text-deep">
+    {s.bullets.map((b) => <li class="flex items-center gap-2.5"><span class="check"><Icon name="check" /></span>{b}</li>)}
+  </ul>
+  <div class="mt-6 flex items-center justify-between">
+    <!-- The link only stretches over the card; the button look is on the inner span (a pressed .btn would shrink the click area) -->
+    <a href={href} class="rounded-full after:absolute after:inset-0 after:z-10" aria-label={`Learn more about ${s.name}`}>
+      <span class="btn btn-white min-h-10 shadow-sm group-hover:bg-deep group-hover:text-white">Learn more</span>
+    </a>
+    <span class="btn-circle shadow-sm group-hover:bg-deep group-hover:text-white"><Icon name="arrow" /></span>
+  </div>
+</article>

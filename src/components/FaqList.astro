@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+interface Props { items: { q: string; a: string; tbd?: boolean }[]; class?: string }
+const { items, class: cls = '' } = Astro.props;
+---
+<div class:list={['divide-y divide-deep/10 border-y border-deep/10', cls]}>
+  {items.map((f) => (
+    <details class="group">
+      <summary class="flex min-h-14 cursor-pointer list-none items-center justify-between gap-4 py-4 text-[17px] font-medium tracking-[-0.02em] text-deep [&::-webkit-details-marker]:hidden">
+        {f.q}
+        <span class="grid size-9 shrink-0 place-items-center rounded-full bg-white text-deep transition group-open:rotate-45 group-open:bg-deep group-open:text-white"><Icon name="plus" class="size-4" /></span>
+      </summary>
+      <p class="max-w-2xl pb-5 text-body">{f.a} {f.tbd && <span class="tbd ml-1" title="Kebijakan belum final">Kebijakan belum final</span>}</p>
+    </details>
+  ))}
+</div>

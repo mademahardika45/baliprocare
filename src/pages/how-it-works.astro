@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import Steps from '../components/Steps.astro';
+import WhatsAppReport from '../components/WhatsAppReport.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Icon from '../components/Icon.astro';
+import { photo, alts } from '../lib/photos';
+
+const after = [
+  { when: 'Within 24 hours', what: 'We reply on WhatsApp with questions or a first estimate.' },
+  { when: 'Next', what: 'We book a short visit to see the property, pool and garden.' },
+  { when: 'Then', what: 'You get a clear plan, schedule and monthly price in writing.' },
+  { when: 'Start', what: 'Your crew starts. You get a photo report after every visit.' },
+];
+const ops = [
+  { icon: 'chat', title: 'One point of contact', text: 'One English-speaking contact for every service. No chasing different people.' },
+  { icon: 'key', title: 'Keys stay safe', text: 'Only contract staff hold villa keys. Keys are logged and stored securely.' },
+  { icon: 'users', title: 'Backup staff', text: 'If a team member is unavailable, a replacement is sent.' },
+  { icon: 'shield', title: 'Freelancers accompanied', text: 'Extra or specialist staff never work alone in your villa.' },
+];
+---
+<Layout
+  title="How It Works"
+  description="From quote to photo report: how Bali Property Care looks after your villa in Uluwatu and Canggu, step by step."
+>
+  <PageHero
+    eyebrow="How it works"
+    title="No surprises."
+    tone2="Just four steps."
+    ctaLabel="Begin Step One"
+    text="Here is exactly what happens from your first message to the first photo report."
+    crumbs={[{ href: '/how-it-works', label: 'How it works' }]}
+  />
+
+  <section class="wrap pb-20 md:pb-28">
+    <Steps detailed />
+  </section>
+
+  <section class="wrap pb-20 md:pb-28">
+    <div class="grid gap-3 lg:grid-cols-2">
+      <div class="card p-6 sm:p-10" data-reveal>
+        <p class="eyebrow">After you send a quote request</p>
+        <h2 class="mt-2 text-[2.2rem] leading-tight tracking-[-0.045em]">What happens next</h2>
+        <ol class="mt-8 grid gap-0">
+          {after.map((a, i) => (
+            <li class="relative grid grid-cols-[auto_1fr] gap-4 pb-7 last:pb-0">
+              <span class="relative z-10 grid size-8 place-items-center rounded-full bg-deep text-sm font-medium text-white">{i + 1}</span>
+              {i < after.length - 1 && <span class="absolute top-8 bottom-0 left-4 w-px bg-deep/15" aria-hidden="true"></span>}
+              <div>
+                <p class="font-medium text-deep">{a.when}</p>
+                <p class="text-body">{a.what}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+      <div class="relative isolate min-h-[420px] overflow-hidden rounded-[var(--radius-card)] p-6 sm:p-8" data-reveal="1">
+        <Image src={photo('pool-cleaning')} alt={alts['pool-cleaning']} widths={[600, 900]} sizes="(min-width:1024px) 50vw, 100vw" class="absolute inset-0 -z-10 size-full object-cover" />
+        <div class="flex h-full items-end justify-end">
+          <WhatsAppReport title="Visit complete" note="Pool cleaned, garden tidied and the villa checked. Everything is in order." photos={['ba-pool-before', 'ba-pool-after']} attention="One light bulb on the terrace needs replacing. We will bring a new one next visit." class="w-full max-w-sm" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pb-6">
+    <SectionHead eyebrow="How we operate" title="Reliable by design." align="split">
+      Contract staff handle monthly packages. Trusted freelancers help with one-off jobs, extra capacity and specialist work.
+    </SectionHead>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {ops.map((o, i) => (
+        <div class="card p-6" data-reveal={i}>
+          <span class="grid size-11 place-items-center rounded-full bg-mist text-sea-deep"><Icon name={o.icon} /></span>
+          <h3 class="mt-8 text-xl tracking-[-0.03em]">{o.title}</h3>
+          <p class="mt-2 text-[15px] text-muted">{o.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <CtaBanner chip="Step one" title="Tell us about" tone2="your property." image="garden-villa" />
+</Layout>

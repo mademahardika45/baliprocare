@@ -1,0 +1,31 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  tone2?: string; // second, softer tone (Healix style)
+  align?: 'left' | 'center' | 'split';
+  as?: 'h1' | 'h2';
+  class?: string;
+}
+const { eyebrow, title, tone2, align = 'left', as: Tag = 'h2', class: cls = '' } = Astro.props;
+const hasIntro = Astro.slots.has('default');
+---
+<div
+  class:list={[
+    'mb-10 md:mb-14',
+    align === 'center' && 'mx-auto max-w-3xl text-center',
+    align === 'split' && 'grid gap-5 md:grid-cols-[1.4fr_1fr] md:items-end md:gap-16',
+    cls,
+  ]}
+  data-reveal
+>
+  <div>
+    {eyebrow && <p class="eyebrow mb-3">{eyebrow}</p>}
+    <Tag class="title">{title}{tone2 && <> <span class="tone2">{tone2}</span></>}</Tag>
+  </div>
+  {hasIntro && (
+    <div class:list={['text-lg text-muted', align === 'center' && 'mx-auto mt-5 max-w-xl', align === 'left' && 'mt-5 max-w-xl']}>
+      <slot />
+    </div>
+  )}
+</div>

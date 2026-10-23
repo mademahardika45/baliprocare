@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-deep.png';
+import Icon from './Icon.astro';
+import { site, waLink } from '../config';
+import { useT } from '../i18n';
+
+const t = useT(Astro.currentLocale);
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links = [
+  { href: '/services', label: t.nav.services, count: 4 },
+  { href: '/packages', label: t.nav.packages },
+  { href: '/how-it-works', label: t.nav.howItWorks },
+  { href: '/areas', label: t.nav.areas },
+  { href: '/about', label: t.nav.about },
+  { href: '/faq', label: t.nav.faq },
+];
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+<div class="bg-mist text-deep">
+  <div class="wrap flex min-h-9 items-center justify-center gap-3 py-1.5 text-center text-[13px]">
+    <span>{t.announcement[0]}</span>
+    <span class="hidden text-deep/40 sm:inline">|</span>
+    <span class="hidden sm:inline">{t.announcement[1]}</span>
+  </div>
+</div>
+
+<header id="site-header" class="sticky top-0 z-50 transition-[background,box-shadow] duration-300">
+  <div class="wrap flex h-[72px] items-center justify-between gap-3">
+    <a href="/" class="flex min-w-0 items-center gap-2.5" aria-label={`${site.name} home`}>
+      <Image src={logo} alt="" width={36} height={32} class="h-auto w-[30px] sm:w-9" loading="eager" />
+      <span class="max-w-[7.4em] text-[16px] leading-[1.02] font-semibold tracking-[-0.045em] text-deep sm:max-w-none sm:text-[20px]">Bali Property Care</span>
+    </a>
+
+    <nav aria-label="Main" class="hidden items-center gap-1 lg:flex">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          aria-current={isActive(l.href) ? 'page' : undefined}
+          class="relative rounded-full px-3.5 py-2 text-[15px] text-deep transition hover:bg-white/70 aria-[current=page]:bg-white"
+        >
+          {l.label}{l.count && <sup class="ml-0.5 text-[10px] text-muted">({l.count})</sup>}
+        </a>
+      ))}
+    </nav>
+
+    <div class="flex items-center gap-2">
+      {site.showClientLogin && (
+        <a href="/login" class="btn hidden text-deep hover:bg-white/70 lg:inline-flex"><Icon name="user" />{t.nav.clientLogin}</a>
+      )}
+      <a href={waLink()} target="_blank" rel="noopener" class="btn btn-line hidden xl:inline-flex" data-track="whatsapp_click" data-label="header">
+        <Icon name="chat" />{t.cta.whatsappShort}
+      </a>
+      <a href="/quote" class="btn btn-dark min-h-10 px-4 text-[14px] sm:min-h-11 sm:px-5 sm:text-[15px]" data-track="quote_cta" data-label="header">{t.cta.quote}</a>
+      <button
+        id="menu-btn"
+        class="inline-grid size-11 place-items-center rounded-full text-deep ring-1 ring-deep/20 ring-inset transition hover:bg-white lg:hidden"
+        aria-label={t.cta.menu}
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <Icon name="menu" class="size-5 menu-open" />
+        <Icon name="close" class="hidden size-5 menu-close" />
+      </button>
+    </div>
+  </div>
+
+  <div id="mobile-menu" hidden class="lg:hidden">
+    <div class="wrap pb-5">
+      <nav aria-label="Mobile" class="glass grid gap-1 rounded-3xl p-3">
+        {links.map((l) => (
+          <a href={l.href} aria-current={isActive(l.href) ? 'page' : undefined}
+             class="flex items-center justify-between rounded-2xl px-4 py-3.5 text-lg tracking-tight text-deep hover:bg-white/70 aria-[current=page]:bg-white">
+            {l.label}<Icon name="arrow" class="size-4 text-muted" />
+          </a>
+        ))}
+        <a href="/contact" class="flex items-center justify-between rounded-2xl px-4 py-3.5 text-lg tracking-tight text-deep hover:bg-white/70">
+          {t.nav.contact}<Icon name="arrow" class="size-4 text-muted" />
+        </a>
+        <div class="mt-2 grid grid-cols-2 gap-2">
+          <a href={waLink()} target="_blank" rel="noopener" class="btn btn-line" data-track="whatsapp_click" data-label="mobile-menu"><Icon name="chat" />{t.cta.whatsappShort}</a>
+          <a href="/quote" class="btn btn-dark" data-track="quote_cta" data-label="mobile-menu">{t.cta.quote}</a>
+        </div>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  const header = document.getElementById('site-header')!;
+  const btn = document.getElementById('menu-btn')!;
+  const menu = document.getElementById('mobile-menu')!;
+  const onScroll = () => {
+    const s = window.scrollY > 8;
+    header.classList.toggle('bg-ice/85', s);
+    header.classList.toggle('backdrop-blur-xl', s);
+    header.classList.toggle('shadow-[0_1px_0_rgba(27,58,72,0.08)]', s);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+  const setOpen = (open: boolean) => {
+    menu.hidden = !open;
+    btn.setAttribute('aria-expanded', String(open));
+    btn.querySelector('.menu-open')!.classList.toggle('hidden', open);
+    btn.querySelector('.menu-close')!.classList.toggle('hidden', !open);
+    if (open) header.classList.add('bg-ice/85', 'backdrop-blur-xl');
+    else onScroll();
+  };
+  btn.addEventListener('click', () => setOpen(menu.hidden));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !menu.hidden) { setOpen(false); btn.focus(); } });
+</script>

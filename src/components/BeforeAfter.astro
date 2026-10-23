@@ -1,0 +1,32 @@
+---
+// Before/after comparison slider. Uses placeholder photos until real job photos exist.
+import { Image } from 'astro:assets';
+import { photo } from '../lib/photos';
+interface Props { before: string; after: string; label: string; placeholder?: boolean }
+const { before, after, label, placeholder = true } = Astro.props;
+---
+<figure class="ba relative isolate aspect-[4/5] overflow-hidden rounded-[var(--radius-card)] bg-mist select-none sm:aspect-[3/4]" style="--pos:50%">
+  <Image src={photo(after)} alt={`${label}: after`} widths={[500, 900]} sizes="(min-width:1024px) 33vw, 100vw" class="absolute inset-0 size-full object-cover" />
+  <div class="absolute inset-0 [clip-path:inset(0_calc(100%-var(--pos))_0_0)]">
+    <Image src={photo(before)} alt={`${label}: before`} widths={[500, 900]} sizes="(min-width:1024px) 33vw, 100vw" class="absolute inset-0 size-full object-cover" />
+  </div>
+  <div class="pointer-events-none absolute inset-y-0 left-[var(--pos)] w-0.5 -translate-x-1/2 bg-white/90">
+    <span class="glass absolute top-1/2 left-1/2 grid size-11 -translate-1/2 place-items-center rounded-full text-deep">
+      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M9 6 3 12l6 6M15 6l6 6-6 6" /></svg>
+    </span>
+  </div>
+  <span class="chip chip-white absolute top-3 left-3">Before</span>
+  <span class="chip chip-white absolute top-3 right-3">After</span>
+  <figcaption class="glass absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 rounded-2xl px-4 py-3 text-[15px] font-medium text-deep">
+    {label}
+    {placeholder && <span class="tbd">Foto contoh</span>}
+  </figcaption>
+  <input type="range" min="0" max="100" value="50" aria-label={`Compare before and after: ${label}`} class="absolute inset-0 z-10 size-full cursor-ew-resize opacity-0" />
+</figure>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.ba').forEach((fig) => {
+    const r = fig.querySelector('input')!;
+    r.addEventListener('input', () => fig.style.setProperty('--pos', `${r.value}%`));
+  });
+</script>

@@ -1,0 +1,356 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import * as O from '../../lib/quote-options';
+import { waLink } from '../../config';
+
+const today = new Date().toISOString().slice(0, 10);
+const nextSteps = [
+  'We reply on WhatsApp within 24 hours',
+  'We book a short visit to see the property',
+  'You get a clear plan and monthly price',
+];
+---
+<Layout
+  title="Get a Quote"
+  description="Tell us about your villa in Uluwatu or Canggu and get a property care quote. Takes about 90 seconds. We reply within 24 hours."
+>
+  <section class="wrap pt-8 pb-6 md:pt-16">
+    <div class="grid gap-8 lg:grid-cols-[0.85fr_1.4fr] lg:gap-14">
+      <aside class="lg:sticky lg:top-28 lg:self-start">
+        <p class="eyebrow">Get a Quote</p>
+        <h1 class="title mt-3">Tell us about your property. <span class="tone2">We'll do the rest.</span></h1>
+        <p class="lead mt-5 max-w-md">About 90 seconds. Answer what you can; we'll ask about the rest.</p>
+        <ul class="mt-8 hidden gap-3 lg:grid">
+          {nextSteps.map((s, i) => (
+            <li class="flex items-center gap-3 text-deep"><span class="grid size-7 place-items-center rounded-full bg-mist text-sm font-medium text-sea-deep">{i + 1}</span>{s}</li>
+          ))}
+        </ul>
+        <div class="card-pastel mt-8 hidden rounded-[var(--radius-card)] p-6 lg:block">
+          <p class="font-medium text-deep">Prefer to chat?</p>
+          <p class="mt-1 text-[15px] text-body">Send us a message and a few photos on WhatsApp.</p>
+          <a href={waLink()} target="_blank" rel="noopener" class="btn btn-white mt-4" data-track="whatsapp_click" data-label="quote-aside"><Icon name="chat" />Chat on WhatsApp</a>
+        </div>
+      </aside>
+
+      <div class="card p-5 sm:p-8 lg:p-10">
+        <!-- Mobile progress -->
+        <div id="q-progress" class="mb-6 hidden" aria-live="polite">
+          <div class="mb-2 flex justify-between text-sm text-muted"><span id="q-step-label">Step 1 of 3 · Your property</span><span id="q-step-pct">33%</span></div>
+          <div class="h-1.5 overflow-hidden rounded-full bg-deep/8"><div id="q-bar" class="h-full w-1/3 rounded-full bg-gradient-to-r from-sage to-sea transition-[width] duration-500"></div></div>
+        </div>
+
+        <div id="q-error" hidden role="alert" class="mb-6 rounded-xl bg-red-50 p-4 text-[15px] text-red-800"></div>
+
+        <form id="quote-form" action="/api/quote" method="post" enctype="multipart/form-data" novalidate class="grid gap-10">
+          <!-- Step 1 -->
+          <fieldset data-step="1" data-title="Your property" class="grid gap-5">
+            <legend class="mb-5 text-2xl font-medium tracking-[-0.035em] text-deep">1. Your property</legend>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="location" class="field-label">Property location</label>
+                <select id="location" name="location" class="input" required aria-describedby="err-location">
+                  <option value="" disabled selected>Choose…</option>
+                  {O.locations.map((o) => <option value={o.value}>{o.label}</option>)}
+                </select>
+                <p id="err-location" class="field-error"></p>
+              </div>
+              <div>
+                <label for="property_type" class="field-label">Property type</label>
+                <select id="property_type" name="property_type" class="input" required aria-describedby="err-property_type">
+                  <option value="" disabled selected>Choose…</option>
+                  {O.propertyTypes.map((o) => <option value={o.value}>{o.label}</option>)}
+                </select>
+                <p id="err-property_type" class="field-error"></p>
+              </div>
+            </div>
+            <div id="other-wrap" hidden>
+              <label for="location_other" class="field-label">Which area?</label>
+              <input id="location_other" name="location_other" class="input" placeholder="e.g. Seminyak" aria-describedby="err-location_other" />
+              <p id="err-location_other" class="field-error"></p>
+            </div>
+            <div role="radiogroup" aria-labelledby="lbl-bedrooms" aria-describedby="err-bedrooms">
+              <p id="lbl-bedrooms" class="field-label">Number of bedrooms</p>
+              <div class="grid grid-cols-5 gap-2">
+                {O.bedrooms.map((o) => <label class="option justify-center px-2"><input type="radio" name="bedrooms" value={o.value} class="sr-only" required />{o.label}</label>)}
+              </div>
+              <p id="err-bedrooms" class="field-error"></p>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div role="radiogroup" aria-labelledby="lbl-pool" aria-describedby="err-pool">
+                <p id="lbl-pool" class="field-label">Pool</p>
+                <div class="grid grid-cols-2 gap-2">
+                  {O.pool.map((o) => <label class="option justify-center"><input type="radio" name="pool" value={o.value} class="sr-only" required />{o.label}</label>)}
+                </div>
+                <p id="err-pool" class="field-error"></p>
+              </div>
+              <div>
+                <label for="garden_size" class="field-label">Garden size <span class="font-normal text-muted">(optional)</span></label>
+                <select id="garden_size" name="garden_size" class="input">
+                  <option value="">Choose…</option>
+                  {O.gardenSizes.map((o) => <option value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label for="residency" class="field-label">Do you live at the property?</label>
+              <select id="residency" name="residency" class="input" required aria-describedby="err-residency">
+                <option value="" disabled selected>Choose…</option>
+                {O.residency.map((o) => <option value={o.value}>{o.label}</option>)}
+              </select>
+              <p id="err-residency" class="field-error"></p>
+            </div>
+          </fieldset>
+
+          <!-- Step 2 -->
+          <fieldset data-step="2" data-title="What you need" class="grid gap-5">
+            <legend class="mb-5 text-2xl font-medium tracking-[-0.035em] text-deep">2. What you need</legend>
+            <div role="group" aria-labelledby="lbl-services" aria-describedby="err-services">
+              <p id="lbl-services" class="field-label">Services needed</p>
+              <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                {O.services.map((o) => <label class="option"><input type="checkbox" name="services" value={o.value} />{o.label}</label>)}
+              </div>
+              <p id="err-services" class="field-error"></p>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="package" class="field-label">Preferred package <span class="font-normal text-muted">(optional)</span></label>
+                <select id="package" name="package" class="input">
+                  <option value="">Choose…</option>
+                  {O.packages.map((o) => <option value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+              <div>
+                <label for="frequency" class="field-label">How often? <span class="font-normal text-muted">(optional)</span></label>
+                <select id="frequency" name="frequency" class="input">
+                  <option value="">Choose…</option>
+                  {O.frequency.map((o) => <option value={o.value}>{o.label}</option>)}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label for="start_date" class="field-label">Desired start date <span class="font-normal text-muted">(optional)</span></label>
+              <input id="start_date" name="start_date" type="date" min={today} class="input sm:max-w-xs" />
+            </div>
+            <div>
+              <label for="notes" class="field-label">Anything else we should know? <span class="font-normal text-muted">(optional)</span></label>
+              <textarea id="notes" name="notes" class="input" maxlength="3000" placeholder="Access, pets, guest schedule, special requests…"></textarea>
+            </div>
+            <div>
+              <p class="field-label">Photos of the property <span class="font-normal text-muted">(optional, up to {O.MAX_PHOTOS})</span></p>
+              <label for="photos" class="flex cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-deep/15 bg-ice/60 px-4 py-6 text-center transition hover:border-sea has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-sea/20">
+                <Icon name="upload" class="size-6 text-sea-deep" />
+                <span class="text-[15px] text-deep">Tap to add photos</span>
+                <span id="photo-names" class="text-sm text-muted">Pool, garden or rooms help us price faster</span>
+                <input id="photos" name="photos" type="file" accept="image/*" multiple class="sr-only" aria-describedby="err-photos" />
+              </label>
+              <p id="err-photos" class="field-error"></p>
+            </div>
+          </fieldset>
+
+          <!-- Step 3 -->
+          <fieldset data-step="3" data-title="Your details" class="grid gap-5">
+            <legend class="mb-5 text-2xl font-medium tracking-[-0.035em] text-deep">3. Your details</legend>
+            <div>
+              <label for="name" class="field-label">Full name</label>
+              <input id="name" name="name" class="input" autocomplete="name" required aria-describedby="err-name" />
+              <p id="err-name" class="field-error"></p>
+            </div>
+            <div class="grid gap-5 sm:grid-cols-2">
+              <div>
+                <label for="whatsapp" class="field-label">WhatsApp number <span class="font-normal text-muted">(with country code)</span></label>
+                <input id="whatsapp" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+61 412 345 678" class="input" required aria-describedby="err-whatsapp" />
+                <p id="err-whatsapp" class="field-error"></p>
+              </div>
+              <div>
+                <label for="email" class="field-label">Email</label>
+                <input id="email" name="email" type="email" autocomplete="email" class="input" required aria-describedby="err-email" />
+                <p id="err-email" class="field-error"></p>
+              </div>
+            </div>
+            <div>
+              <label for="heard_from" class="field-label">How did you hear about us? <span class="font-normal text-muted">(optional)</span></label>
+              <select id="heard_from" name="heard_from" class="input sm:max-w-xs">
+                <option value="">Choose…</option>
+                {O.heardFrom.map((o) => <option value={o.value}>{o.label}</option>)}
+              </select>
+            </div>
+            <div class="hidden" aria-hidden="true"><label>Company website <input name="company_website" tabindex="-1" autocomplete="off" /></label></div>
+            <input type="hidden" name="started" value="" />
+            <div>
+              <label class="flex items-start gap-3 text-[15px] text-body">
+                <input type="checkbox" name="consent" value="yes" required class="mt-1 size-4 accent-[#3E7287]" aria-describedby="err-consent" />
+                <span>I agree to be contacted about my inquiry. See our <a href="/privacy" class="text-sea-deep underline underline-offset-2">Privacy Policy</a>.</span>
+              </label>
+              <p id="err-consent" class="field-error"></p>
+            </div>
+            <button type="submit" class="btn btn-dark btn-lg w-full sm:w-auto sm:justify-self-start" data-submit>
+              Send my request <Icon name="arrow" class="arrow" />
+            </button>
+            <p class="text-sm text-muted">We reply on WhatsApp within 24 hours.</p>
+          </fieldset>
+
+          <!-- Mobile step navigation -->
+          <div id="q-nav" class="-mt-4 hidden items-center justify-between gap-3">
+            <button type="button" id="q-back" class="btn btn-line invisible">Back</button>
+            <button type="button" id="q-next" class="btn btn-dark btn-lg">Next <Icon name="arrow" class="arrow" /></button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  type Rule = (f: HTMLFormElement) => string | null;
+  const form = document.getElementById('quote-form') as HTMLFormElement;
+  const steps = [...form.querySelectorAll<HTMLFieldSetElement>('fieldset[data-step]')];
+  const nav = document.getElementById('q-nav')!;
+  const back = document.getElementById('q-back') as HTMLButtonElement;
+  const next = document.getElementById('q-next') as HTMLButtonElement;
+  const progress = document.getElementById('q-progress')!;
+  const errorBox = document.getElementById('q-error')!;
+  const val = (n: string) => ((form.elements.namedItem(n) as HTMLInputElement | null)?.value ?? '').trim();
+  const radio = (n: string) => (form.querySelector<HTMLInputElement>(`input[name="${n}"]:checked`)?.value ?? '');
+
+  (form.elements.namedItem('started') as HTMLInputElement).value = String(Date.now());
+
+  // Validation rules (mirror the server)
+  const rules: Record<string, Rule> = {
+    location: () => (val('location') ? null : 'Please choose a location.'),
+    location_other: () => (val('location') === 'other' && !val('location_other') ? 'Please type your area.' : null),
+    property_type: () => (val('property_type') ? null : 'Please choose a property type.'),
+    bedrooms: () => (radio('bedrooms') ? null : 'Please choose the number of bedrooms.'),
+    pool: () => (radio('pool') ? null : 'Please tell us if there is a pool.'),
+    residency: () => (val('residency') ? null : 'Please choose an option.'),
+    services: () => (form.querySelector('input[name="services"]:checked') ? null : 'Please choose at least one service.'),
+    photos: () => {
+      const files = (form.elements.namedItem('photos') as HTMLInputElement).files;
+      if (!files) return null;
+      if (files.length > 5) return 'Please upload up to 5 photos.';
+      if ([...files].some((f) => f.size > 10 * 1024 * 1024)) return 'Each photo must be under 10 MB.';
+      return null;
+    },
+    name: () => (val('name').length >= 2 ? null : 'Please enter your full name.'),
+    whatsapp: () => (val('whatsapp').replace(/\D/g, '').length >= 8 ? null : 'Please enter your WhatsApp number with country code.'),
+    email: () => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val('email')) ? null : 'Please enter a valid email address.'),
+    consent: () => ((form.elements.namedItem('consent') as HTMLInputElement).checked ? null : 'Please agree so we can contact you about your inquiry.'),
+  };
+  const stepFields: Record<number, string[]> = {
+    1: ['location', 'location_other', 'property_type', 'bedrooms', 'pool', 'residency'],
+    2: ['services', 'photos'],
+    3: ['name', 'whatsapp', 'email', 'consent'],
+  };
+
+  function setError(name: string, msg: string | null) {
+    const el = document.getElementById(`err-${name}`);
+    if (el) { el.textContent = msg ?? ''; el.classList.toggle('show', !!msg); }
+    const input = form.querySelector<HTMLElement>(`#${name}`) ?? form.querySelector<HTMLElement>(`[name="${name}"]`);
+    input?.setAttribute('aria-invalid', String(!!msg));
+  }
+  function check(names: string[]) {
+    let firstBad: string | null = null;
+    for (const n of names) {
+      const msg = rules[n]?.(form) ?? null;
+      setError(n, msg);
+      if (msg && !firstBad) firstBad = n;
+    }
+    if (firstBad) {
+      const target = form.querySelector<HTMLElement>(`#${firstBad}`) ?? form.querySelector<HTMLElement>(`[name="${firstBad}"]`);
+      target?.focus({ preventScroll: true });
+      target?.closest('div')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    return !firstBad;
+  }
+
+  // Re-check a field once the visitor changes it
+  form.addEventListener('change', (e) => {
+    const n = (e.target as HTMLInputElement).name;
+    if (rules[n] && document.getElementById(`err-${n}`)?.classList.contains('show')) setError(n, rules[n](form));
+  });
+  form.addEventListener('focusout', (e) => {
+    const n = (e.target as HTMLInputElement).name;
+    if (['name', 'whatsapp', 'email', 'location_other'].includes(n) && val(n)) setError(n, rules[n](form));
+  });
+
+  // "Other" location
+  const otherWrap = document.getElementById('other-wrap')!;
+  const syncOther = () => { otherWrap.hidden = val('location') !== 'other'; };
+  (form.elements.namedItem('location') as HTMLSelectElement).addEventListener('change', syncOther);
+
+  // Photo names
+  const photoInput = form.elements.namedItem('photos') as HTMLInputElement;
+  photoInput.addEventListener('change', () => {
+    const names = [...(photoInput.files ?? [])].map((f) => f.name);
+    document.getElementById('photo-names')!.textContent = names.length ? `${names.length} photo(s): ${names.join(', ')}` : 'Pool, garden or rooms help us price faster';
+    setError('photos', rules.photos(form));
+  });
+
+  // Pre-fill from links (?package=, ?service=, ?location=other)
+  const params = new URLSearchParams(location.search);
+  const pkg = params.get('package');
+  if (pkg) (form.elements.namedItem('package') as HTMLSelectElement).value = pkg;
+  const svc = params.get('service');
+  if (svc) form.querySelector<HTMLInputElement>(`input[name="services"][value="${CSS.escape(svc)}"]`)?.click();
+  if (params.get('location') === 'other') { (form.elements.namedItem('location') as HTMLSelectElement).value = 'other'; syncOther(); }
+  if (params.get('error')) { errorBox.textContent = 'Some answers need checking. Please review the form.'; errorBox.hidden = false; }
+
+  // Tracking: first interaction
+  let started = false;
+  form.addEventListener('input', () => { if (!started) { started = true; window.bpcTrack?.('quote_started'); } });
+
+  // Mobile: 3 steps with a progress bar. Desktop: one page.
+  const mq = window.matchMedia('(max-width: 767px)');
+  let current = 1;
+  function render() {
+    const mobile = mq.matches;
+    progress.classList.toggle('hidden', !mobile);
+    nav.classList.toggle('hidden', !mobile);
+    nav.classList.toggle('flex', mobile);
+    steps.forEach((s) => { s.hidden = mobile && Number(s.dataset.step) !== current; });
+    back.classList.toggle('invisible', current === 1);
+    next.hidden = current === 3;
+    const pct = Math.round((current / 3) * 100);
+    document.getElementById('q-bar')!.style.width = `${pct}%`;
+    document.getElementById('q-step-pct')!.textContent = `${pct}%`;
+    document.getElementById('q-step-label')!.textContent = `Step ${current} of 3 · ${steps[current - 1].dataset.title}`;
+  }
+  const go = (n: number) => { current = n; render(); form.closest('.card')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
+  next.addEventListener('click', () => { if (check(stepFields[current])) go(current + 1); });
+  back.addEventListener('click', () => go(current - 1));
+  mq.addEventListener('change', render);
+  render();
+
+  // Submit
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    errorBox.hidden = true;
+    const all = [1, 2, 3].flatMap((s) => stepFields[s]);
+    if (!check(mq.matches ? stepFields[3] : all)) return;
+    if (mq.matches) {
+      for (const s of [1, 2]) if (!check(stepFields[s])) { go(s); return; }
+    }
+    const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    btn.disabled = true;
+    btn.firstChild!.textContent = 'Sending… ';
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        Object.entries((data.errors ?? {}) as Record<string, string>).forEach(([n, m]) => setError(n, m));
+        const bad = Object.keys(data.errors ?? {})[0];
+        const badStep = bad ? Number(Object.entries(stepFields).find(([, f]) => f.includes(bad))?.[0] ?? 3) : 3;
+        if (mq.matches) go(badStep);
+        throw new Error(data.error || 'Something went wrong.');
+      }
+      window.bpcTrack?.('quote_submitted', { package: val('package') || 'none', location: val('location') });
+      location.href = data.redirect;
+    } catch (err) {
+      errorBox.textContent = `${(err as Error).message} You can also message us on WhatsApp.`;
+      errorBox.hidden = false;
+      errorBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      btn.disabled = false;
+      btn.firstChild!.textContent = 'Send my request ';
+    }
+  });
+</script>

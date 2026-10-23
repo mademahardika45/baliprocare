@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import ServiceCard from '../../components/ServiceCard.astro';
+import JobsList from '../../components/JobsList.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import Icon from '../../components/Icon.astro';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+---
+<Layout
+  title="Villa Care Services"
+  description="Housekeeping, pool care, garden and landscape, and property maintenance for villas in Uluwatu and Canggu. Monthly packages or one-off jobs."
+>
+  <PageHero
+    eyebrow="Services"
+    title="Everything your villa needs."
+    tone2="One team."
+    ctaLabel="Plan My Villa Care"
+    text="Four services, sold as monthly packages or one-off jobs. One English-speaking contact for all of them."
+    crumbs={[{ href: '/services', label: 'Services' }]}
+  >
+    <a slot="extra" href="/packages" class="btn btn-line">See packages</a>
+  </PageHero>
+
+  <section class="wrap pb-20 md:pb-28">
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {services.map((s, i) => <ServiceCard service={s} delay={i} />)}
+    </div>
+  </section>
+
+  <section class="wrap pb-20 md:pb-28">
+    <div class="card-pastel flex flex-col gap-6 rounded-[var(--radius-card)] p-6 sm:p-10 md:flex-row md:items-center md:justify-between" data-reveal>
+      <div class="flex items-start gap-4">
+        <span class="grid size-12 shrink-0 place-items-center rounded-full glass text-sea-deep"><Icon name="sparkle" /></span>
+        <div>
+          <h2 class="text-2xl tracking-[-0.035em] sm:text-3xl">Custom requests welcome.</h2>
+          <p class="mt-2 max-w-xl text-body">Every property is different. Tell us what you need and we'll build the plan around it.</p>
+        </div>
+      </div>
+      <a href="/quote?package=custom" class="btn btn-dark btn-lg shrink-0" data-track="quote_cta" data-label="custom">Ask for a custom plan <Icon name="arrow" class="arrow" /></a>
+    </div>
+  </section>
+
+  <section class="wrap pb-10">
+    <SectionHead eyebrow="On-demand" title="Single visits" tone2="and one-off jobs." align="split">
+      No monthly commitment. Book a deep clean before guests arrive, rescue a green pool or bring an overgrown garden back.
+    </SectionHead>
+    <JobsList />
+  </section>
+
+  <CtaBanner />
+</Layout>

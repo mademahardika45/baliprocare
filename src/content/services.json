@@ -1,0 +1,247 @@
+[
+  {
+    "id": "housekeeping",
+    "order": 1,
+    "name": "Housekeeping",
+    "icon": "home",
+    "tagline": "Clean spaces, better living.",
+    "promise": "A fresh, tidy villa every time you or your guests walk in.",
+    "opening": "Your villa is fresh, tidy and guest-ready before you even think about it.",
+    "bullets": [
+      "Daily or regular cleaning",
+      "Linen and towel change",
+      "Villa prep before arrival"
+    ],
+    "included": [
+      "Daily or regular cleaning",
+      "Room and villa preparation",
+      "Linen and towel change",
+      "Bathroom and kitchen detail",
+      "Restocking basics",
+      "Flexible schedule"
+    ],
+    "frequencies": [
+      "Daily",
+      "2–3 times a week",
+      "Weekly",
+      "On arrival",
+      "After check-out"
+    ],
+    "cover": "housekeeper-bathroom",
+    "gallery": [
+      "housekeeper-bed",
+      "towels-bench",
+      "bedroom-gable",
+      "towel-basket",
+      "housekeeper-linen",
+      "towels-shelf"
+    ],
+    "faqs": [
+      {
+        "q": "Do I need to be home?",
+        "a": "No. Our contract staff can hold your keys and work to an agreed schedule while you are away. You get a photo report after every visit."
+      },
+      {
+        "q": "Who supplies the cleaning materials?",
+        "a": "We bring our own equipment and basic cleaning products.",
+        "tbd": true
+      },
+      {
+        "q": "Can I change my schedule?",
+        "a": "Yes. Message your contact on WhatsApp and we will adjust the plan."
+      }
+    ],
+    "seoTitle": "Villa Housekeeping in Uluwatu & Canggu",
+    "seoDescription": "Regular villa cleaning, linen change and guest preparation in Uluwatu and Canggu, with a photo report after every visit.",
+    "cta": "Plan My Housekeeping",
+    "report": {
+      "title": "Villa is guest-ready",
+      "note": "Beds made, bathrooms done, fresh towels in. Everything is in place.",
+      "photos": [
+        "ba-bed-before",
+        "ba-bed-after"
+      ]
+    }
+  },
+  {
+    "id": "pool-care",
+    "order": 2,
+    "name": "Pool Care",
+    "icon": "waves",
+    "tagline": "Crystal clear, always.",
+    "promise": "A clean, safe pool, tested and treated on a set schedule.",
+    "opening": "Your pool is clean and safe before you even think about it.",
+    "bullets": [
+      "Water testing and treatment",
+      "Skimming and brushing",
+      "Pump and filter check"
+    ],
+    "included": [
+      "Pool cleaning and maintenance",
+      "Water testing and treatment",
+      "Equipment check (pump, filter)",
+      "Skimming and brushing",
+      "Keeping the pool safe and clean"
+    ],
+    "frequencies": [
+      "Weekly",
+      "Twice weekly",
+      "One-off deep clean"
+    ],
+    "cover": "pool-skimmer",
+    "gallery": [
+      "pool-cleaning",
+      "pool-brush",
+      "pool-net-leaf",
+      "pool-garden",
+      "pool-lush",
+      "pool-deck"
+    ],
+    "faqs": [
+      {
+        "q": "How often should my pool be cleaned?",
+        "a": "Weekly suits most villas. Twice a week helps in the rainy season or when the villa is busy with guests."
+      },
+      {
+        "q": "Who supplies the pool chemicals?",
+        "a": "Pool chemicals are included in our pool care visits.",
+        "tbd": true
+      },
+      {
+        "q": "My pool is green. Can you fix it?",
+        "a": "Yes. A one-off pool restoration brings it back, then regular care keeps it clear."
+      }
+    ],
+    "seoTitle": "Pool Cleaning & Maintenance in Canggu & Uluwatu",
+    "seoDescription": "Villa pool cleaning, water testing and equipment checks in Canggu and Uluwatu. Weekly or twice-weekly care with photo reports.",
+    "cta": "Plan My Pool Care",
+    "report": {
+      "title": "Pool cleaned and tested",
+      "note": "Skimmed, brushed and pH balanced. Pump and filter checked.",
+      "photos": [
+        "ba-pool-before",
+        "ba-pool-after"
+      ]
+    }
+  },
+  {
+    "id": "garden-landscape",
+    "order": 3,
+    "name": "Garden & Landscape",
+    "icon": "leaf",
+    "tagline": "A green space, a better vibe.",
+    "promise": "A tidy, healthy tropical garden, all year round.",
+    "opening": "Your garden stays green and tidy, through dry season and rain.",
+    "bullets": [
+      "Lawn mowing",
+      "Plant care and trimming",
+      "Seasonal clean-up"
+    ],
+    "included": [
+      "Garden maintenance",
+      "Lawn mowing",
+      "Plant care and trimming",
+      "Seasonal cleaning",
+      "Waste removal"
+    ],
+    "frequencies": [
+      "Weekly",
+      "Fortnightly",
+      "Monthly",
+      "Seasonal"
+    ],
+    "cover": "garden-watering",
+    "gallery": [
+      "garden-mowing",
+      "hedge-trim",
+      "lawn-care",
+      "garden-rake",
+      "grass-trim",
+      "garden-frangipani"
+    ],
+    "faqs": [
+      {
+        "q": "Do you take away garden waste?",
+        "a": "Yes. Waste removal is part of every garden visit."
+      },
+      {
+        "q": "Can you look after a large garden?",
+        "a": "Yes. Pricing depends on garden size, so tell us roughly how big it is in the quote form."
+      },
+      {
+        "q": "Do I need to provide tools?",
+        "a": "No. We bring our own tools and equipment.",
+        "tbd": true
+      }
+    ],
+    "seoTitle": "Garden & Landscape Maintenance in Bali",
+    "seoDescription": "Lawn mowing, plant care, trimming and seasonal clean-ups for villa gardens in Uluwatu and Canggu.",
+    "cta": "Plan My Garden Care",
+    "report": {
+      "title": "Garden done for the week",
+      "note": "Lawn mowed, hedges trimmed, leaves cleared and removed.",
+      "photos": [
+        "ba-garden-before",
+        "ba-garden-after"
+      ]
+    }
+  },
+  {
+    "id": "property-maintenance",
+    "order": 4,
+    "name": "Property Maintenance",
+    "icon": "wrench",
+    "tagline": "Everything working, without the hassle.",
+    "promise": "Routine checks and small fixes, before they become big problems.",
+    "opening": "Everything in your villa keeps working, and you hear about issues before they grow.",
+    "bullets": [
+      "Routine checks",
+      "Small fixes and touch-ups",
+      "AC, pest and painting partners"
+    ],
+    "included": [
+      "General repairs",
+      "Routine checks (plumbing, electrics, AC, locks)",
+      "Small fixes and touch-ups",
+      "Coordination of specialists (AC, pest control, painting)"
+    ],
+    "frequencies": [
+      "Monthly check",
+      "On request",
+      "Emergency call-out"
+    ],
+    "cover": "door-repair",
+    "gallery": [
+      "ac-cleaning",
+      "surface-wipe",
+      "door-repair"
+    ],
+    "faqs": [
+      {
+        "q": "What kind of repairs do you do?",
+        "a": "Small fixes and touch-ups ourselves. For AC servicing, pest control and painting, we coordinate trusted specialists and keep you updated."
+      },
+      {
+        "q": "How are repairs charged?",
+        "a": "A small repair call-out starts at Rp 135,000, with materials charged extra. We tell you the cost before we start."
+      },
+      {
+        "q": "What about emergencies?",
+        "a": "Existing clients can reach our duty contact on WhatsApp for urgent issues.",
+        "tbd": true
+      }
+    ],
+    "seoTitle": "Villa Maintenance & Repairs in Uluwatu & Canggu",
+    "seoDescription": "Routine property checks, small repairs and specialist coordination for villas in Uluwatu and Canggu.",
+    "cta": "Plan My Maintenance",
+    "report": {
+      "title": "Monthly check complete",
+      "note": "Front door lock fixed and the AC filter cleaned.",
+      "photos": [
+        "door-repair",
+        "ac-cleaning"
+      ],
+      "attention": "The gate hinge needs oiling. We will book it in unless you tell us otherwise."
+    }
+  }
+]

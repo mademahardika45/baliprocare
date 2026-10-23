@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+<Layout title="Page not found" description="This page doesn't exist." noindex>
+  <section class="wrap py-24 text-center md:py-36">
+    <p class="chip">404</p>
+    <h1 class="display mx-auto mt-6 max-w-3xl">This page is <span class="tone2">not in good hands.</span></h1>
+    <p class="lead mx-auto mt-6 max-w-md">It may have moved. Let's get you back.</p>
+    <div class="mt-8 flex justify-center gap-2.5">
+      <a href="/" class="btn btn-dark btn-lg">Go home <Icon name="arrow" class="arrow" /></a>
+      <a href="/packages" class="btn btn-line btn-lg">See packages</a>
+    </div>
+  </section>
+</Layout>

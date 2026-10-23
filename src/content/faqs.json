@@ -1,0 +1,17 @@
+[
+  { "id": "keys", "order": 1, "topic": "Access and security", "q": "Who holds my keys?", "a": "Only our contract staff hold villa keys. Keys are logged and stored securely. Freelancers never hold keys and are always accompanied." },
+  { "id": "home", "order": 2, "topic": "Access and security", "q": "Do I have to be home?", "a": "No. Most of our owners aren't. We work to an agreed schedule and send a photo report after every visit." },
+  { "id": "abroad", "order": 3, "topic": "Access and security", "q": "What if I'm abroad?", "a": "That's what we're here for. One English-speaking contact keeps you updated on WhatsApp, with photos after each visit." },
+  { "id": "supplies", "order": 4, "topic": "Service", "q": "Do you bring supplies and equipment?", "a": "We bring our own equipment and basic cleaning products. Pool chemicals are included in pool care visits.", "tbd": true },
+  { "id": "schedule", "order": 5, "topic": "Service", "q": "Can I change my schedule?", "a": "Yes. Message your contact on WhatsApp and we'll adjust the plan." },
+  { "id": "missed", "order": 6, "topic": "Service", "q": "What if a visit is missed?", "a": "If a team member is sick or unavailable, we send backup staff so your visit still happens." },
+  { "id": "trained", "order": 7, "topic": "Staff", "q": "Are your staff trained and checked?", "a": "Yes. We check ID and references, and every team member is trained on our visit checklists." },
+  { "id": "problem", "order": 8, "topic": "Staff", "q": "Who do I contact if there's a problem?", "a": "Your single point of contact, on WhatsApp. We reply within 24 hours." },
+  { "id": "pricing", "order": 9, "topic": "Pricing and payment", "q": "How is pricing set?", "a": "By property size (bedrooms, pool and garden) and how often you need us. We confirm the final price after a short property survey." },
+  { "id": "payment", "order": 10, "topic": "Pricing and payment", "q": "How do I pay?", "a": "Payment methods will be confirmed in your service agreement.", "tbd": true },
+  { "id": "contract", "order": 11, "topic": "Pricing and payment", "q": "Is there a contract or minimum period?", "a": "Every client gets clear written terms before we start.", "tbd": true },
+  { "id": "areas", "order": 12, "topic": "Areas", "q": "Which areas do you cover?", "a": "Uluwatu and Canggu. Each zone has its own crew." },
+  { "id": "more-areas", "order": 13, "topic": "Areas", "q": "Do you plan to add more areas?", "a": "Yes, over time. If your property is somewhere else, tell us where and we'll let you know if we can help." },
+  { "id": "start", "order": 14, "topic": "Start", "q": "How fast can we start?", "a": "Usually soon after the property visit, once we have agreed your plan.", "tbd": true },
+  { "id": "after-quote", "order": 15, "topic": "Start", "q": "What happens after I send a quote request?", "a": "We reply on WhatsApp within 24 hours, arrange a short property visit, agree a plan and price, and then your team starts." }
+]

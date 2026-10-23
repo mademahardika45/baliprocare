@@ -1,0 +1,39 @@
+[
+  {
+    "id": "uluwatu",
+    "order": 1,
+    "name": "Uluwatu",
+    "summary": "The Bukit peninsula: cliff-top villas, ocean views and busy rental homes.",
+    "neighbourhoods": [
+      "Pecatu",
+      "Bingin",
+      "Ungasan"
+    ],
+    "response": "Reply within 24 hours. Dedicated Uluwatu crew.",
+    "photo": "pool-deck",
+    "center": [
+      -8.8187,
+      115.1298
+    ],
+    "radiusKm": 5.2
+  },
+  {
+    "id": "canggu",
+    "order": 2,
+    "name": "Canggu",
+    "summary": "Rice-field villas, family homes and guesthouses along the west coast.",
+    "neighbourhoods": [
+      "Berawa",
+      "Pererenan",
+      "Batu Bolong",
+      "Echo Beach"
+    ],
+    "response": "Reply within 24 hours. Dedicated Canggu crew.",
+    "photo": "pool-lush",
+    "center": [
+      -8.6534,
+      115.1291
+    ],
+    "radiusKm": 3.4
+  }
+]

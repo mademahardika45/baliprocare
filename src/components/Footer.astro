@@ -1,0 +1,101 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/brand/logo-mist.png';
+import Icon from './Icon.astro';
+import { site, waLink } from '../config';
+import { useT } from '../i18n';
+
+const t = useT(Astro.currentLocale);
+const year = new Date().getFullYear();
+const services = [
+  ['/services/housekeeping', 'Housekeeping'],
+  ['/services/pool-care', 'Pool Care'],
+  ['/services/garden-landscape', 'Garden & Landscape'],
+  ['/services/property-maintenance', 'Property Maintenance'],
+];
+const company = [
+  ['/packages', t.nav.packages], ['/how-it-works', t.nav.howItWorks], ['/areas', t.nav.areas],
+  ['/about', t.nav.about], ['/faq', t.nav.faq], ['/contact', t.nav.contact],
+];
+const head = 'mb-4 text-[13px] font-medium tracking-normal text-mist/55';
+const link = 'text-ice/90 transition hover:text-white';
+---
+<footer class="relative mt-10 overflow-hidden rounded-t-[2.25rem] bg-deep text-mist">
+  <!-- soft glow -->
+  <div aria-hidden="true" class="pointer-events-none absolute -top-40 right-[-10%] size-[36rem] rounded-full bg-sea/25 blur-[120px]"></div>
+
+  <!-- Call to action -->
+  <div class="wrap relative grid gap-8 pt-16 pb-12 md:grid-cols-[1.5fr_1fr] md:items-end md:pt-20 md:pb-16">
+    <div>
+      <Image src={logo} alt="" width={44} height={40} class="h-auto w-10" />
+      <p class="mt-7 text-[clamp(2.1rem,5.2vw,3.75rem)] leading-[1.02] font-medium tracking-[-0.045em] text-ice">
+        Your property <span class="text-mist/50">in good hands.</span>
+      </p>
+      <p class="mt-4 max-w-md text-mist/70">You enjoy the property. We take care of the rest.</p>
+    </div>
+    <div class="flex flex-wrap gap-2.5 md:justify-end">
+      <a href="/quote" class="btn btn-white btn-lg" data-track="quote_cta" data-label="footer">Start Your Free Quote <Icon name="arrow" class="arrow" /></a>
+      <a href={waLink()} target="_blank" rel="noopener" class="btn btn-lg text-ice ring-1 ring-mist/35 ring-inset hover:bg-white/10" data-track="whatsapp_click" data-label="footer-cta"><Icon name="chat" />{t.cta.whatsappShort}</a>
+    </div>
+  </div>
+
+  <!-- Columns -->
+  <div class="wrap relative grid grid-cols-2 gap-x-6 gap-y-10 border-t border-white/10 py-12 md:grid-cols-4">
+    <div>
+      <h2 class={head}>{t.nav.services}</h2>
+      <ul class="grid gap-2.5">{services.map(([href, label]) => <li><a href={href} class={link}>{label}</a></li>)}</ul>
+    </div>
+    <div>
+      <h2 class={head}>Company</h2>
+      <ul class="grid gap-2.5">{company.map(([href, label]) => <li><a href={href} class={link}>{label}</a></li>)}</ul>
+    </div>
+    <div class="col-span-2 sm:col-span-1">
+      <h2 class={head}>{t.footer.contact}</h2>
+      <ul class="grid gap-3">
+        <li><a href={waLink()} target="_blank" rel="noopener" class:list={[link, 'inline-flex items-center gap-2']} data-track="whatsapp_click" data-label="footer"><Icon name="chat" class="size-4 shrink-0" />{site.whatsappDisplay}</a></li>
+        <li><a href={`mailto:${site.email}`} class:list={[link, 'inline-flex items-center gap-2']}><Icon name="mail" class="size-4 shrink-0" />{site.email}</a></li>
+        <li><a href={site.instagramUrl} target="_blank" rel="noopener" class:list={[link, 'inline-flex items-center gap-2']}><Icon name="instagram" class="size-4 shrink-0" />{site.instagramHandle}</a></li>
+      </ul>
+    </div>
+    <div class="col-span-2 sm:col-span-1">
+      <h2 class={head}>{t.footer.hours}</h2>
+      <p class="text-ice">{site.hours}</p>
+      <p class="text-sm text-mist/60">{site.timezone}</p>
+      <p class="mt-1 text-sm text-mist/60">{t.footer.reply}</p>
+      <h2 class:list={[head, 'mt-6 mb-2']}>{t.footer.areas}</h2>
+      <p class="text-ice">Uluwatu <span class="text-mist/40">·</span> Canggu</p>
+    </div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="wrap relative flex flex-col gap-3 border-t border-white/10 py-6 text-sm text-mist/60 md:flex-row md:items-center md:justify-between">
+    <p>© {year} {site.name}. All rights reserved.</p>
+    <div class="flex gap-5">
+      <a href="/privacy" class="hover:text-white">{t.footer.privacy}</a>
+      <a href="/terms" class="hover:text-white">{t.footer.terms}</a>
+    </div>
+    <p>Website by <a href="https://sreative.id" target="_blank" rel="noopener" class="font-medium text-ice underline-offset-4 hover:underline">sreative.id</a></p>
+  </div>
+
+  <!-- Giant wordmark -->
+  <div aria-hidden="true" class="wrap relative select-none">
+    <p class="footer-wordmark">BaliPropertyCare</p>
+  </div>
+</footer>
+
+<style>
+  .footer-wordmark {
+    font-size: min(10.9vw, 26rem);
+    line-height: .86;
+    font-weight: 600;
+    letter-spacing: -0.065em;
+    white-space: nowrap;
+    text-align: center;
+    margin-bottom: -0.04em;
+    padding-bottom: .08em;
+    background: linear-gradient(180deg, rgba(205, 232, 229, .42) 0%, rgba(122, 178, 178, .16) 55%, rgba(122, 178, 178, 0) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+</style>

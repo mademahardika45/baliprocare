@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PackageCard from '../components/PackageCard.astro';
+import JobsList from '../components/JobsList.astro';
+import TrustBlocks from '../components/TrustBlocks.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Icon from '../components/Icon.astro';
+import { rp, usd } from '../config';
+
+const packages = (await getCollection('packages')).sort((a, b) => a.data.order - b.data.order);
+const byId = Object.fromEntries(packages.map((p) => [p.id, p.data]));
+
+// Comparison table (brief + price list). "–" = not included.
+const rows: [string, string, string, string][] = [
+  ['Best for', 'Owners who are away', 'Owners who want a fully managed property', 'Airbnb hosts and managers'],
+  ['Pool care', 'Weekly', 'Twice a week', 'Add-on, single-visit price'],
+  ['Garden care', 'Weekly', 'Weekly', 'Add-on, single-visit price'],
+  ['Housekeeping', '–', 'Twice a week', 'After every check-out'],
+  ['Property check', 'Weekly', 'Weekly', 'On arrival'],
+  ['Linen and towel change', 'Add-on', 'Add-on', 'Included'],
+  ['Restocking supplies', 'Add-on', 'Add-on', 'Included'],
+  ['Photo report on WhatsApp', 'Every visit', 'Every visit', 'Every turnover'],
+  ['Backup staff', 'Yes', 'Yes', 'Yes'],
+];
+const priceRow = [
+  `From ${rp(byId['care-basic'].from)} / month`,
+  `From ${rp(byId['care-plus'].from)} / month`,
+  `From ${rp(byId['rental-ready'].from)} / turnover`,
+];
+const ids = ['care-basic', 'care-plus', 'rental-ready'];
+---
+<Layout
+  title="Packages & Pricing"
+  description="Care Basic, Care Plus and Rental Ready: monthly villa care packages in Uluwatu and Canggu, with clear 'from' prices in IDR and a free quote."
+>
+  <PageHero
+    eyebrow="Packages & Pricing"
+    title="Clear monthly pricing."
+    tone2="No surprise bills."
+    ctaLabel="Find My Package"
+    text="Three packages with 'from' prices. Your final price depends on property size and is confirmed after a short property survey."
+    crumbs={[{ href: '/packages', label: 'Packages' }]}
+  />
+
+  <section class="wrap pb-20 md:pb-28">
+    <div class="grid gap-3 lg:grid-cols-3">
+      {packages.map((p, i) => <PackageCard pkg={p} delay={i} />)}
+    </div>
+    <p class="mt-5 text-sm text-muted">Prices in IDR. USD shown for reference only (rate ≈ Rp 17,900). Final price depends on your property size.</p>
+  </section>
+
+  <!-- Comparison -->
+  <section class="wrap pb-20 md:pb-28">
+    <SectionHead eyebrow="Compare" title="What each package" tone2="includes." />
+    <div class="card overflow-x-auto p-2 sm:p-4" data-reveal>
+      <table class="w-full min-w-[720px] border-collapse text-left text-[15px]">
+        <caption class="sr-only">Package comparison</caption>
+        <thead>
+          <tr>
+            <th scope="col" class="w-[28%] p-4 font-normal text-muted"></th>
+            {ids.map((id) => (
+              <th scope="col" class:list={['p-4 align-bottom', id === 'care-plus' && 'rounded-t-2xl bg-mist/60']}>
+                <span class="block text-xl font-medium tracking-[-0.035em] text-deep">{byId[id].name}</span>
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr class="border-t border-deep/10">
+              <th scope="row" class="p-4 font-medium text-deep">{r[0]}</th>
+              {r.slice(1).map((c, i) => (
+                <td class:list={['p-4 text-body', ids[i] === 'care-plus' && 'bg-mist/60']}>
+                  {c === 'Yes' || c === 'Included' ? <span class="inline-flex items-center gap-2"><span class="check"><Icon name="check" /></span>{c}</span> : c}
+                </td>
+              ))}
+            </tr>
+          ))}
+          <tr class="border-t border-deep/10">
+            <th scope="row" class="p-4 font-medium text-deep">Price</th>
+            {priceRow.map((p, i) => (
+              <td class:list={['p-4', ids[i] === 'care-plus' && 'bg-mist/60']}>
+                <span class="font-medium text-deep">{p}</span>
+                <span class="block text-sm text-muted">{usd(byId[ids[i]].from)}</span>
+              </td>
+            ))}
+          </tr>
+          <tr>
+            <td class="p-4"></td>
+            {ids.map((id) => (
+              <td class:list={['p-4', id === 'care-plus' && 'rounded-b-2xl bg-mist/60']}>
+                <a href={`/quote?package=${id}`} class:list={['btn w-full', id === 'care-plus' ? 'btn-dark' : 'btn-line']} data-track="package_selected" data-label={id}>Choose {byId[id].name}</a>
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-5 flex flex-col gap-1 text-sm text-muted sm:flex-row sm:justify-between">
+      <p>Final price depends on your property size. Starting prices shown for a 1–2 bedroom villa.</p>
+      <p class="font-medium text-deep">Need something different? <a href="/quote?package=custom" class="underline underline-offset-2">We build custom plans.</a></p>
+    </div>
+  </section>
+
+  <section class="wrap pb-20 md:pb-28">
+    <SectionHead eyebrow="On-demand services" title="Priced per visit" tone2="or per job." align="split">
+      For one-off needs, or to add pool and garden care to Rental Ready.
+    </SectionHead>
+    <JobsList />
+  </section>
+
+  <section class="wrap pb-6">
+    <SectionHead eyebrow="Included with every package" title="Built on trust." />
+    <TrustBlocks />
+  </section>
+
+  <CtaBanner chip="Not sure which package?" title="Tell us about your villa." tone2="We'll recommend one." primary="whatsapp" image="pool-cabana" />
+</Layout>

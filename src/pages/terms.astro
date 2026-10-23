@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../config';
+const updated = 'October 2026';
+---
+<Layout title="Terms of Service" description="The terms for using the Bali Property Care website and requesting a quote.">
+  <section class="wrap max-w-3xl pt-14 pb-10 md:pt-20">
+    <p class="eyebrow">Last updated {updated}</p>
+    <h1 class="display mt-3">Terms of Service</h1>
+    <p class="mt-6 rounded-xl bg-tbd/70 p-4 text-[15px] text-tbd-ink"><strong>Draf.</strong> Minta review dulu sebelum launch. Layanan untuk klien diatur di service agreement tertulis yang terpisah.</p>
+
+    <div class="prose-bpc mt-10 text-[17px]">
+      <h2>About this website</h2>
+      <p>This website is run by {site.name} to describe our property care services in Bali and to receive quote requests. Using the site does not create a contract for services.</p>
+
+      <h2>Prices</h2>
+      <p>Prices on this website are starting prices in Indonesian Rupiah. USD amounts are for reference only. Your final price depends on your property size, garden size and schedule, and is confirmed in writing after a property survey.</p>
+
+      <h2>Quotes and services</h2>
+      <p>A quote request is not a booking. Services start only after we agree a plan and price with you in a written service agreement, which sets out the schedule, payment terms, key handling and cancellation.</p>
+
+      <h2>Your information</h2>
+      <p>How we use the information you send us is explained in our <a href="/privacy">Privacy Policy</a>.</p>
+
+      <h2>Content</h2>
+      <p>Text, photos and the {site.name} name and logo belong to us or are used with permission. Please don't copy them without asking.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about these terms? Message us on WhatsApp at {site.whatsappDisplay}.</p>
+    </div>
+  </section>
+</Layout>

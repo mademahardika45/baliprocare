@@ -1,0 +1,42 @@
+---
+import Icon from './Icon.astro';
+import { rp, usd } from '../config';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props { pkg: CollectionEntry<'packages'>; delay?: number }
+const { pkg, delay = 0 } = Astro.props;
+const p = pkg.data;
+const unit = p.unit === 'month' ? '/ month' : '/ turnover';
+---
+<article
+  class:list={[
+    'relative flex flex-col rounded-[var(--radius-card)] p-6 sm:p-7',
+    p.featured ? 'card-pastel ring-1 ring-sage/40' : 'bg-white',
+  ]}
+  data-reveal={delay}
+>
+  <div class="flex items-center justify-between gap-3">
+    <p class="text-sm text-muted">{p.bestFor}</p>
+    {p.featured && <span class="chip bg-white">Most complete</span>}
+  </div>
+  <h3 class="mt-2 text-[2rem] leading-none font-medium tracking-[-0.045em]">{p.name}</h3>
+
+  <div class="mt-6 border-b border-deep/10 pb-6">
+    <p class="text-sm text-muted">from</p>
+    <p class="text-[2.1rem] leading-tight font-medium tracking-[-0.05em] text-deep">
+      {rp(p.from)} <span class="text-base font-normal tracking-tight text-muted">{unit}</span>
+    </p>
+    <p class="mt-1 text-sm text-muted">{usd(p.from)} · 1–2 bedroom villa</p>
+  </div>
+
+  <ul class="mt-6 grid gap-3 text-[15px] text-deep">
+    {p.includes.map((i) => <li class="flex items-center gap-3"><span class="check"><Icon name="check" /></span>{i}</li>)}
+  </ul>
+  {p.note && <p class="mt-4 text-sm text-muted">{p.note}</p>}
+
+  <div class="mt-auto pt-8">
+    <a href={`/quote?package=${pkg.id}`} class:list={['btn w-full', p.featured ? 'btn-dark' : 'btn-line']} data-track="package_selected" data-label={pkg.id}>
+      Choose {p.name} <Icon name="arrow" class="arrow" />
+    </a>
+  </div>
+</article>

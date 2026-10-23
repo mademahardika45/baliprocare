@@ -1,0 +1,16 @@
+---
+import Icon from './Icon.astro';
+import { waLink } from '../config';
+---
+<a
+  href={waLink()}
+  target="_blank"
+  rel="noopener"
+  class="group fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom))] z-[60] flex items-center gap-2 rounded-full bg-deep p-1.5 text-white shadow-[0_14px_30px_-10px_rgba(16,37,47,0.6)] transition hover:bg-night sm:right-6 sm:bottom-6"
+  aria-label="Chat with us on WhatsApp"
+  data-track="whatsapp_click"
+  data-label="floating"
+>
+  <span class="grid size-12 place-items-center rounded-full bg-white/10 ring-1 ring-white/15"><Icon name="chat" class="size-6" /></span>
+  <span class="hidden pr-4 text-[15px] font-medium tracking-tight sm:inline">Chat with us</span>
+</a>

@@ -1,0 +1,43 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { site } from '../config';
+const updated = 'October 2026';
+---
+<Layout title="Privacy Policy" description="What personal data Bali Property Care collects through this website, why, and how we look after it.">
+  <section class="wrap max-w-3xl pt-14 pb-10 md:pt-20">
+    <p class="eyebrow">Last updated {updated}</p>
+    <h1 class="display mt-3">Privacy Policy</h1>
+    <p class="mt-6 rounded-xl bg-tbd/70 p-4 text-[15px] text-tbd-ink"><strong>Draf.</strong> Minta review dulu dan tambahkan nama legal usaha sebelum launch.</p>
+
+    <div class="prose-bpc mt-10 text-[17px]">
+      <p>This policy explains what information {site.name} ("we") collects when you use {site.url.replace('https://', '')}, why we collect it and how we look after it.</p>
+
+      <h2>What we collect</h2>
+      <p>When you send a quote request or a message, we collect the details you give us:</p>
+      <ul>
+        <li>Your name, WhatsApp number and email address</li>
+        <li>Property details: location, type, bedrooms, pool, garden size and the services you need</li>
+        <li>Anything you write in the message box and any property photos you upload</li>
+        <li>How you heard about us</li>
+      </ul>
+      <p>If you accept cookies, we also use Google Analytics and the Meta Pixel to understand how visitors use the site and to measure our ads. These tools collect information such as pages visited and device type. If you decline, they are not loaded.</p>
+
+      <h2>Why we collect it</h2>
+      <ul>
+        <li>To reply to your inquiry and prepare a quote</li>
+        <li>To arrange a property visit and provide our services if you become a client</li>
+        <li>To improve our website and advertising (only with your consent)</li>
+      </ul>
+      <p>We never sell your data, and we only contact you about your inquiry or the services you use.</p>
+
+      <h2>How we store it</h2>
+      <p>Inquiries are stored securely and only the team members who handle your request can see them. We keep inquiry details for as long as needed to respond and, for clients, for as long as we provide services and keep required records.</p>
+
+      <h2>Your choices</h2>
+      <p>You can ask us to see, correct or delete the information we hold about you at any time. Contact us on WhatsApp at {site.whatsappDisplay}{site.email ? ` or by email at ${site.email}` : ''}.</p>
+
+      <h2>Contact</h2>
+      <p>{site.name}, Bali, Indonesia. <span class="tbd">Nama legal belum final</span></p>
+    </div>
+  </section>
+</Layout>

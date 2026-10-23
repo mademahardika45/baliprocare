@@ -1,0 +1,148 @@
+---
+// Looping WhatsApp conversation (sample). Messages appear one by one, with a typing indicator before ours.
+// No card background: only the bubbles float over whatever is behind.
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import { photo } from '../lib/photos';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+
+const time = (m: number) => `10:${String(12 + m).padStart(2, '0')}`;
+---
+<div class:list={['chat-sim', cls]} role="img" aria-label="Example WhatsApp conversation: Bali Property Care sends a visit report with photos and a note, and the owner replies.">
+  <span class="tbd mb-2 inline-block">Contoh percakapan</span>
+  <div class="chat-list">
+    <div class="chat-msg in" data-wait="700">
+      <p class="font-medium text-deep">Visit complete at your Canggu villa.</p>
+      <p class="mt-0.5 text-body">Pool cleaned and tested, garden tidied.</p>
+      <span class="chat-time">{time(0)}</span>
+    </div>
+
+    <div class="chat-msg in photos" data-wait="900">
+      <div class="grid grid-cols-2 gap-1">
+        <figure class="relative overflow-hidden rounded-xl">
+          <Image src={photo('ba-pool-before')} alt="" widths={[240, 360]} sizes="150px" class="h-24 w-full object-cover" />
+          <span class="chip chip-white absolute top-1 left-1 !px-1.5 !py-0 text-[10px]">Before</span>
+        </figure>
+        <figure class="relative overflow-hidden rounded-xl">
+          <Image src={photo('ba-pool-after')} alt="" widths={[240, 360]} sizes="150px" class="h-24 w-full object-cover" />
+          <span class="chip chip-white absolute top-1 left-1 !px-1.5 !py-0 text-[10px]">After</span>
+        </figure>
+      </div>
+      <span class="chat-time">{time(0)}</span>
+    </div>
+
+    <div class="chat-msg in" data-wait="1200">
+      <p class="flex items-center gap-1 text-xs font-medium text-sea-deep"><Icon name="alert" class="size-3.5" />Needs your attention</p>
+      <p class="mt-0.5 text-body">The gate hinge needs oiling. Shall we book it in?</p>
+      <span class="chat-time">{time(1)}</span>
+    </div>
+
+    <div class="chat-msg out" data-wait="1900">
+      <p class="text-deep">Yes please, go ahead. Thank you!</p>
+      <span class="chat-time">{time(3)} <Icon name="sent" class="inline size-3.5 text-sea" /></span>
+    </div>
+
+    <div class="chat-msg in" data-wait="1300">
+      <p class="text-body">Done, booked for Friday. We'll send photos after the visit.</p>
+      <span class="chat-time">{time(3)}</span>
+    </div>
+
+    <div class="chat-msg out" data-wait="1500">
+      <p class="text-deep">Perfect, so good to know it's handled.</p>
+      <span class="chat-time">{time(4)} <Icon name="sent" class="inline size-3.5 text-sea" /></span>
+    </div>
+
+    <div class="chat-typing" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+</div>
+
+<style is:global>
+  .chat-sim { display: flex; flex-direction: column; width: 100%; max-width: 24rem; }
+  .chat-sim > .tbd { align-self: flex-start; }
+  .chat-list {
+    display: flex; flex-direction: column; justify-content: flex-end; gap: .5rem;
+    flex: 1 1 auto; min-height: 22rem; overflow: hidden;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%);
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 14%);
+    transition: opacity .7s ease;
+  }
+  .chat-list.is-fading { opacity: 0; }
+
+  .chat-msg {
+    display: none; position: relative; max-width: 86%; padding: .55rem .8rem 1.3rem;
+    font-size: .9rem; line-height: 1.35; border-radius: 1.1rem;
+    box-shadow: 0 10px 24px -12px rgba(16, 37, 47, .55);
+  }
+  .chat-msg.in { align-self: flex-start; background: #fff; border-top-left-radius: .35rem; }
+  .chat-msg.out { align-self: flex-end; background: #D6EEEA; border-top-right-radius: .35rem; }
+  .chat-msg.photos { padding: .35rem .35rem 1.4rem; }
+  .chat-msg.show { display: block; animation: chatIn .6s cubic-bezier(.2, .8, .2, 1) both; }
+  .chat-time { position: absolute; right: .7rem; bottom: .3rem; font-size: .68rem; color: #557079; }
+
+  .chat-typing {
+    display: none; align-self: flex-start; gap: .28rem; padding: .8rem .9rem; border-radius: 1.1rem; border-top-left-radius: .35rem;
+    background: #fff; box-shadow: 0 10px 24px -12px rgba(16, 37, 47, .55);
+  }
+  .chat-typing.show { display: inline-flex; animation: chatIn .35s ease both; }
+  .chat-typing i { width: .42rem; height: .42rem; border-radius: 50%; background: #7AB2B2; animation: chatDot 1s infinite ease-in-out; }
+  .chat-typing i:nth-child(2) { animation-delay: .15s; }
+  .chat-typing i:nth-child(3) { animation-delay: .3s; }
+
+  @keyframes chatIn { from { opacity: 0; transform: translateY(14px) scale(.94); filter: blur(8px); } to { opacity: 1; transform: none; filter: blur(0); } }
+  @keyframes chatDot { 0%, 60%, 100% { transform: translateY(0); opacity: .45; } 30% { transform: translateY(-.28rem); opacity: 1; } }
+
+  /* No motion: show the whole conversation */
+  @media (prefers-reduced-motion: reduce) {
+    .chat-msg { display: block; animation: none !important; }
+    .chat-typing { display: none !important; }
+  }
+</style>
+
+<script>
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
+  document.querySelectorAll<HTMLElement>('.chat-sim').forEach((root) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const list = root.querySelector<HTMLElement>('.chat-list')!;
+    const msgs = [...list.querySelectorAll<HTMLElement>('.chat-msg')];
+    const typing = list.querySelector<HTMLElement>('.chat-typing')!;
+    let visible = false;
+    let running = false;
+
+    const waitVisible = async () => { while (!visible || document.hidden) await sleep(300); };
+
+    async function play() {
+      if (running) return;
+      running = true;
+      while (true) {
+        msgs.forEach((m) => m.classList.remove('show'));
+        list.classList.remove('is-fading');
+        await sleep(600);
+        for (const m of msgs) {
+          await waitVisible();
+          const wait = Number(m.dataset.wait) || 1000;
+          if (m.classList.contains('in')) {
+            // Their reply: typing dots first
+            list.appendChild(typing);
+            typing.classList.add('show');
+            await sleep(wait);
+            typing.classList.remove('show');
+          } else {
+            await sleep(wait);
+          }
+          list.insertBefore(m, typing);
+          m.classList.add('show');
+        }
+        await sleep(4200);
+        list.classList.add('is-fading');
+        await sleep(800);
+      }
+    }
+
+    new IntersectionObserver((entries) => {
+      visible = entries[0].isIntersecting;
+      if (visible) play();
+    }, { threshold: 0.2 }).observe(root);
+  });
+</script>

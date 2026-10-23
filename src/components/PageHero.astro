@@ -1,0 +1,44 @@
+---
+// Inner-page hero (Healix layout: big title left, short text + action right)
+import Icon from './Icon.astro';
+import { waLink } from '../config';
+interface Props {
+  eyebrow?: string;
+  title: string;
+  tone2?: string;
+  text: string;
+  cta?: 'quote' | 'whatsapp' | 'none';
+  ctaLabel?: string;
+  crumbs?: { href: string; label: string }[];
+}
+const { eyebrow, title, tone2, text, cta = 'quote', ctaLabel = 'Request a Free Quote', crumbs } = Astro.props;
+---
+<section class="wrap pt-10 pb-14 md:pt-20 md:pb-20">
+  {crumbs && (
+    <nav aria-label="Breadcrumb" class="mb-8 text-sm text-muted">
+      <ol class="flex flex-wrap items-center gap-1.5">
+        <li><a href="/" class="hover:text-deep">Home</a></li>
+        {crumbs.map((c) => <li class="flex items-center gap-1.5"><span aria-hidden="true">/</span><a href={c.href} class="hover:text-deep">{c.label}</a></li>)}
+      </ol>
+    </nav>
+  )}
+  <div class="grid gap-8 lg:grid-cols-[1.55fr_1fr] lg:items-end lg:gap-16">
+    <div class="animate-rise">
+      {eyebrow && <p class="eyebrow mb-4">{eyebrow}</p>}
+      <h1 class="display">{title}{tone2 && <> <span class="tone2">{tone2}</span></>}</h1>
+    </div>
+    <div class="animate-rise [animation-delay:120ms] lg:pb-3">
+      <p class="lead max-w-md">{text}</p>
+      {cta !== 'none' && (
+        <div class="mt-6 flex flex-wrap gap-2.5">
+          {cta === 'quote' ? (
+            <a href="/quote" class="btn btn-dark" data-track="quote_cta" data-label="page-hero">{ctaLabel} <Icon name="arrow" class="arrow" /></a>
+          ) : (
+            <a href={waLink()} target="_blank" rel="noopener" class="btn btn-dark" data-track="whatsapp_click" data-label="page-hero"><Icon name="chat" />Chat on WhatsApp</a>
+          )}
+          <slot name="extra" />
+        </div>
+      )}
+    </div>
+  </div>
+</section>

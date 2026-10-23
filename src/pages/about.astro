@@ -1,0 +1,102 @@
+---
+import { Image } from 'astro:assets';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import SectionHead from '../components/SectionHead.astro';
+import TrustBlocks from '../components/TrustBlocks.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import Icon from '../components/Icon.astro';
+import { photo, alts } from '../lib/photos';
+
+const team = [
+  { photo: 'housekeeper-curtains', role: 'Housekeeping' },
+  { photo: 'pool-cleaning', role: 'Pool care' },
+  { photo: 'garden-watering', role: 'Garden care' },
+  { photo: 'door-repair', role: 'Maintenance' },
+];
+
+const standards = [
+  { icon: 'shield', text: 'Trained staff' },
+  { icon: 'clipboard', text: 'Checklists on every visit' },
+  { icon: 'user', text: 'Uniformed team' },
+  { icon: 'camera', text: 'Photo reports' },
+  { icon: 'sparkle', text: 'Supervisor spot checks' },
+];
+---
+<Layout
+  title="About Us"
+  description="Bali Property Care looks after villas, homes and small businesses in Uluwatu and Canggu, so owners can have peace of mind."
+>
+  <PageHero
+    eyebrow="About"
+    title="Peace of mind,"
+    tone2="knowing your property is in good hands."
+    ctaLabel="Talk About My Villa"
+    text="Our mission is simple: to give you peace of mind, knowing your property is in good hands."
+    crumbs={[{ href: '/about', label: 'About' }]}
+  />
+
+  <!-- Story -->
+  <section class="wrap pb-20 md:pb-28">
+    <div class="grid gap-3 lg:grid-cols-[1.35fr_1fr]">
+      <figure class="relative min-h-[420px] overflow-hidden rounded-[var(--radius-card)]" data-reveal>
+        <Image src={photo('staff')} alt={alts['staff']} widths={[600, 800]} sizes="(min-width:1024px) 55vw, 100vw" class="absolute inset-0 size-full object-cover" />
+        <figcaption class="glass absolute inset-x-3 bottom-3 flex items-center justify-between gap-3 rounded-2xl px-4 py-3">
+          <span><span class="block font-medium text-deep">Our team</span><span class="text-sm text-muted">Uniformed, trained and checked</span></span>
+          <span class="tbd">Hanya contoh</span>
+        </figcaption>
+      </figure>
+      <div class="card p-6 sm:p-10" data-reveal="1">
+        <p class="eyebrow">Our story</p>
+        <h2 class="mt-2 text-[2.2rem] leading-tight tracking-[-0.045em]">Why Bali Property Care exists</h2>
+        <div class="mt-6 grid gap-4 text-[17px] text-body">
+          <p>Many villa owners in Bali live abroad for part of the year. Keeping a pool clear, a garden green and a villa guest-ready usually means juggling several people and hoping the work gets done.</p>
+          <p>We started Bali Property Care to make that simple: one team, one contact and a photo report after every visit, so you always know your property is looked after.</p>
+          <p class="rounded-xl bg-tbd/70 p-4 text-[15px] text-tbd-ink"><strong>Hanya contoh:</strong> tambahkan 1–2 paragraf singkat tentang siapa di balik Bali Property Care dan kenapa memulainya. Buat personal dan jujur.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Standards -->
+  <section class="wrap pb-20 md:pb-28">
+    <div class="relative isolate overflow-hidden rounded-[var(--radius-card)] bg-deep p-6 sm:p-10" data-reveal>
+      <Image src={photo('housekeeper-linen')} alt="" widths={[600, 1000]} sizes="100vw" class="absolute inset-0 -z-20 size-full object-cover opacity-30" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-deep via-deep/85 to-deep/50"></div>
+      <span class="chip chip-white">Our standards</span>
+      <h2 class="title mt-6 max-w-2xl text-ice">The same standard, <span class="text-mist/70">every visit.</span></h2>
+      <ul class="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+        {standards.map((s) => (
+          <li class="glass-dark flex items-center gap-3 rounded-2xl p-4 text-[15px] text-white"><Icon name={s.icon} class="size-5 shrink-0 text-mist" />{s.text}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="wrap pb-20 md:pb-28">
+    <SectionHead eyebrow="Trust" title="Can you rely on us?" tone2="Here's how we earn it." />
+    <TrustBlocks />
+  </section>
+
+  <!-- Team -->
+  <section class="wrap pb-6">
+    <SectionHead eyebrow="Team" title="The people" tone2="looking after your villa." align="split">
+      The same crew visits your villa every time.
+    </SectionHead>
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+      {team.map((m, i) => (
+        <figure class="relative aspect-[3/4] overflow-hidden rounded-[var(--radius-card)]" data-reveal={i}>
+          <Image src={photo(m.photo)} alt={alts[m.photo] ?? ''} widths={[300, 500]} sizes="(min-width:768px) 25vw, 50vw" class="absolute inset-0 size-full object-cover" />
+          <figcaption class="glass absolute inset-x-2 bottom-2 rounded-2xl px-3 py-2.5 sm:inset-x-3 sm:bottom-3 sm:px-4 sm:py-3">
+            <span class="block font-medium text-deep">Nama depan</span>
+            <span class="block text-sm text-muted">{m.role}</span>
+          </figcaption>
+          <span class="tbd absolute top-3 left-3">Hanya contoh</span>
+        </figure>
+      ))}
+    </div>
+  </section>
+
+  <CtaBanner image="bedroom-view" />
+</Layout>

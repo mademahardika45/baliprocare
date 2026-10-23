@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import { site } from '../config';
+
+interface Props {
+  title: string; // page title without brand
+  description: string;
+  image?: string; // path under /public
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+}
+const { title, description, image = '/og-image.jpg', noindex = false, jsonLd } = Astro.props;
+
+const fullTitle = Astro.url.pathname === '/' ? `${site.name} — ${title}` : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
+const ogImage = new URL(image, Astro.site ?? site.url).href;
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  '@id': `${site.url}/#business`,
+  name: site.name,
+  slogan: site.tagline,
+  description: 'Housekeeping, pool care, garden and property maintenance for villas, homes and small businesses in Uluwatu and Canggu, Bali.',
+  url: site.url,
+  logo: `${site.url}/icon-512.png`,
+  image: `${site.url}/og-image.jpg`,
+  telephone: `+${site.whatsappNumber}`,
+  ...(site.email ? { email: site.email } : {}),
+  address: { '@type': 'PostalAddress', addressRegion: 'Bali', addressCountry: 'ID' },
+  areaServed: site.areas.map((a) => ({ '@type': 'Place', name: `${a}, Bali` })),
+  sameAs: [site.instagramUrl],
+};
+const ld = [business, ...(jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [])];
+const tracking = { ga4: site.ga4Id, pixel: site.metaPixelId };
+---
+<!doctype html>
+<html lang={Astro.currentLocale ?? 'en'}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>document.documentElement.classList.add('js')</script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#EEF7FF" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_US" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(ld)} />
+  </head>
+  <body class="min-h-dvh">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-deep focus:px-4 focus:py-2 focus:text-white">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <WhatsAppFloat />
+
+    <!-- Cookie notice: only shown when tracking IDs are configured -->
+    {(tracking.ga4 || tracking.pixel) && (
+      <div id="consent" hidden class="fixed inset-x-3 bottom-3 z-[70] mx-auto max-w-xl rounded-2xl glass p-4 sm:bottom-5 sm:p-5">
+        <p class="text-sm text-deep">We use cookies to measure visits and improve our ads. <a href="/privacy" class="underline underline-offset-2">Privacy Policy</a></p>
+        <div class="mt-3 flex gap-2">
+          <button class="btn btn-dark min-h-10 text-sm" data-consent="yes">Accept</button>
+          <button class="btn btn-line min-h-10 text-sm" data-consent="no">Decline</button>
+        </div>
+      </div>
+    )}
+
+    <script is:inline define:vars={{ tracking }}>
+      // Tracking: events go to dataLayer always; GA4 / Meta Pixel load only after consent.
+      window.dataLayer = window.dataLayer || [];
+      window.bpcTrack = function (event, params) {
+        params = Object.assign({ page: location.pathname }, params || {});
+        window.dataLayer.push(Object.assign({ event: event }, params));
+        if (window.gtag) window.gtag('event', event, params);
+        if (window.fbq) window.fbq('trackCustom', event, params);
+      };
+      function loadTracking() {
+        if (tracking.ga4) {
+          var s = document.createElement('script'); s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + tracking.ga4; document.head.appendChild(s);
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date()); window.gtag('config', tracking.ga4);
+        }
+        if (tracking.pixel) {
+          !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+          window.fbq('init', tracking.pixel); window.fbq('track', 'PageView');
+        }
+      }
+      var consentBox = document.getElementById('consent');
+      if (consentBox) {
+        var choice = null;
+        try { choice = localStorage.getItem('bpc-consent'); } catch (e) {}
+        if (choice === 'yes') loadTracking();
+        else if (!choice) consentBox.hidden = false;
+        consentBox.addEventListener('click', function (e) {
+          var b = e.target.closest('[data-consent]'); if (!b) return;
+          try { localStorage.setItem('bpc-consent', b.dataset.consent); } catch (err) {}
+          consentBox.hidden = true;
+          if (b.dataset.consent === 'yes') loadTracking();
+        });
+      }
+      // Click tracking: any element with data-track="event_name"
+      document.addEventListener('click', function (e) {
+        var el = e.target.closest('[data-track]'); if (!el) return;
+        window.bpcTrack(el.dataset.track, { label: el.dataset.label || el.textContent.trim().slice(0, 60) });
+      });
+    </script>
+    <script>
+      // Scroll reveal
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      const io = new IntersectionObserver(
+        (entries) => entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } }),
+        { threshold: 0.12, rootMargin: '0px 0px -40px 0px' },
+      );
+      els.forEach((el, i) => { el.style.transitionDelay = `${(Number(el.dataset.reveal) || 0) * 80}ms`; io.observe(el); });
+    </script>
+  </body>
+</html>

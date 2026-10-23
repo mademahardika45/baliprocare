@@ -1,0 +1,156 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import FaqList from '../../components/FaqList.astro';
+import WhatsAppReport from '../../components/WhatsAppReport.astro';
+import CtaBanner from '../../components/CtaBanner.astro';
+import { photo, alts } from '../../lib/photos';
+import { site, waLink } from '../../config';
+
+export async function getStaticPaths() {
+  const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+  return services.map((service, i) => ({
+    params: { slug: service.id },
+    props: { service, next: services[(i + 1) % services.length] },
+  }));
+}
+interface Props { service: CollectionEntry<'services'>; next: CollectionEntry<'services'> }
+const { service, next } = Astro.props;
+const s = service.data;
+
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: s.name,
+    serviceType: s.name,
+    description: s.seoDescription,
+    provider: { '@id': `${site.url}/#business` },
+    areaServed: site.areas.map((a) => ({ '@type': 'Place', name: `${a}, Bali` })),
+    url: `${site.url}/services/${service.id}`,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: s.faqs.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  },
+];
+const heroImgs = [s.cover, ...s.gallery.slice(0, 2)];
+---
+<Layout title={s.seoTitle} description={s.seoDescription} jsonLd={jsonLd}>
+  <!-- Hero -->
+  <section class="wrap pt-10 pb-12 md:pt-20 md:pb-16">
+    <nav aria-label="Breadcrumb" class="mb-8 text-sm text-muted">
+      <ol class="flex flex-wrap items-center gap-1.5">
+        <li><a href="/" class="hover:text-deep">Home</a></li>
+        <li class="flex items-center gap-1.5"><span aria-hidden="true">/</span><a href="/services" class="hover:text-deep">Services</a></li>
+        <li class="flex items-center gap-1.5"><span aria-hidden="true">/</span><span aria-current="page" class="text-deep">{s.name}</span></li>
+      </ol>
+    </nav>
+    <div class="grid gap-8 lg:grid-cols-[1.55fr_1fr] lg:items-end lg:gap-16">
+      <div class="animate-rise">
+        <span class="chip"><Icon name={s.icon} class="size-4" />{s.name}</span>
+        <h1 class="display mt-5">{s.tagline.replace(/\.$/, '')}<span class="tone2">.</span></h1>
+      </div>
+      <div class="animate-rise [animation-delay:120ms] lg:pb-3">
+        <p class="lead max-w-md">{s.opening}</p>
+        <div class="mt-6 flex flex-wrap gap-2.5">
+          <a href={`/quote?service=${service.id}`} class="btn btn-dark" data-track="quote_cta" data-label={`service-${service.id}`}>{s.cta} <Icon name="arrow" class="arrow" /></a>
+          <a href={waLink(`Hi Bali Property Care, I'd like to ask about ${s.name.toLowerCase()}.`)} target="_blank" rel="noopener" class="btn btn-line" data-track="whatsapp_click" data-label={`service-${service.id}`}><Icon name="chat" />WhatsApp</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap pb-20 md:pb-28">
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-3">
+      {heroImgs.map((p, i) => (
+        <div class:list={['relative overflow-hidden rounded-[var(--radius-card)]', i === 0 ? 'col-span-2 aspect-[4/3] md:col-span-1 md:aspect-[3/4]' : 'aspect-[3/4]']} data-reveal={i}>
+          <Image src={photo(p)} alt={alts[p] ?? ''} widths={[400, 700, 900]} sizes="(min-width:768px) 33vw, 100vw" class="absolute inset-0 size-full object-cover" loading={i === 0 ? 'eager' : 'lazy'} />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- What you get + frequency -->
+  <section class="wrap pb-20 md:pb-28">
+    <div class="grid gap-3 lg:grid-cols-[1.3fr_1fr]">
+      <div class="card p-6 sm:p-10" data-reveal>
+        <p class="eyebrow">What you get</p>
+        <h2 class="mt-2 text-[2.2rem] leading-tight tracking-[-0.045em]">Everything included</h2>
+        <ul class="mt-8 grid gap-4 sm:grid-cols-2">
+          {s.included.map((item) => (
+            <li class="flex items-start gap-3 text-[16px] text-deep"><span class="check mt-0.5"><Icon name="check" /></span>{item}</li>
+          ))}
+        </ul>
+      </div>
+      <div class="card-pastel flex flex-col rounded-[var(--radius-card)] p-6 sm:p-10" data-reveal="1">
+        <p class="eyebrow">How often</p>
+        <h2 class="mt-2 text-[2.2rem] leading-tight tracking-[-0.045em]">Your schedule</h2>
+        <ul class="mt-8 flex flex-wrap gap-2">
+          {s.frequencies.map((f) => <li class="rounded-full bg-white px-4 py-2 text-[15px] text-deep">{f}</li>)}
+        </ul>
+        <p class="mt-auto pt-10 text-body">Every property is different. Tell us what you need and we'll build the plan around it.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- How we report -->
+  <section class="wrap pb-20 md:pb-28">
+    <div class="relative isolate grid gap-8 overflow-hidden rounded-[var(--radius-card)] bg-deep p-6 sm:p-10 lg:grid-cols-2 lg:items-center" data-reveal>
+      <Image src={photo(s.gallery[2] ?? s.cover)} alt="" widths={[600, 1000]} sizes="100vw" class="absolute inset-0 -z-20 size-full object-cover opacity-35 blur-[2px]" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-deep via-deep/80 to-deep/40"></div>
+      <div>
+        <span class="chip chip-white">How we report</span>
+        <h2 class="title mt-6 text-ice">Proof after <span class="text-mist/70">every visit.</span></h2>
+        <ul class="mt-6 grid gap-3 text-mist/90">
+          <li class="flex gap-3"><Icon name="camera" class="mt-0.5 size-5 shrink-0" />Photos before and after</li>
+          <li class="flex gap-3"><Icon name="alert" class="mt-0.5 size-5 shrink-0" />A short note on anything that needs attention</li>
+          <li class="flex gap-3"><Icon name="chat" class="mt-0.5 size-5 shrink-0" />Sent to you on WhatsApp</li>
+        </ul>
+      </div>
+      <WhatsAppReport {...s.report} class="mx-auto w-full max-w-sm lg:mr-0" />
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section class="wrap pb-20 md:pb-28">
+    <SectionHead eyebrow="Gallery" title="Recent work" align="split">
+      Photos from recent visits. <span class="tbd ml-1">Foto contoh</span>
+    </SectionHead>
+    <div class="grid grid-cols-2 gap-3 md:grid-cols-3">
+      {s.gallery.map((p, i) => (
+        <div class="relative aspect-square overflow-hidden rounded-[1.2rem]" data-reveal={i % 3}>
+          <Image src={photo(p)} alt={alts[p] ?? ''} widths={[400, 700]} sizes="(min-width:768px) 33vw, 50vw" class="absolute inset-0 size-full object-cover transition duration-700 hover:scale-105" />
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="wrap pb-10">
+    <div class="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:gap-16">
+      <div data-reveal>
+        <p class="eyebrow">Questions</p>
+        <h2 class="title mt-2">{s.name} <span class="tone2">FAQ</span></h2>
+        <a href="/faq" class="mt-6 inline-flex items-center gap-2 font-medium text-deep hover:underline">All questions <Icon name="arrow" class="size-4" /></a>
+      </div>
+      <FaqList items={s.faqs} />
+    </div>
+  </section>
+
+  <section class="wrap pt-10">
+    <a href={`/services/${next.id}`} class="group card flex items-center justify-between gap-4 p-6 sm:p-8" data-reveal>
+      <span>
+        <span class="eyebrow">Next service</span>
+        <span class="mt-1 block text-2xl font-medium tracking-[-0.04em] text-deep sm:text-3xl">{next.data.name}</span>
+      </span>
+      <span class="btn-circle bg-mist group-hover:bg-deep group-hover:text-white"><Icon name="arrow" /></span>
+    </a>
+  </section>
+
+  <CtaBanner title={`Ready for ${s.name.toLowerCase()}`} tone2="you don't have to think about?" image={s.gallery[0]} />
+</Layout>

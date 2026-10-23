@@ -1,0 +1,66 @@
+---
+// OpenStreetMap (via Leaflet) with the service zones from src/content/areas.json
+import { getCollection } from 'astro:content';
+interface Props { class?: string }
+const { class: cls = '' } = Astro.props;
+const areas = (await getCollection('areas')).sort((a, b) => a.data.order - b.data.order);
+const zones = areas.map((a) => ({ name: a.data.name, center: a.data.center, radius: a.data.radiusKm * 1000, places: a.data.neighbourhoods }));
+---
+<figure class:list={['bpc-map relative isolate h-[380px] overflow-hidden rounded-[var(--radius-card)] bg-mist sm:h-[440px]', cls]}>
+  <div class="map-canvas absolute inset-0" data-zones={JSON.stringify(zones)} role="img" aria-label={`Map of Bali showing our service zones: ${zones.map((z) => z.name).join(' and ')}`}></div>
+  <figcaption class="sr-only">Service zones: {zones.map((z) => `${z.name} (${z.places.join(', ')})`).join('; ')}.</figcaption>
+</figure>
+
+<style>
+  .bpc-map :global(.leaflet-container) { background: #CDE8E5; font-family: inherit; }
+  /* Tint the OpenStreetMap tiles to the brand palette */
+  .bpc-map :global(.leaflet-tile-pane) { filter: saturate(.55) hue-rotate(-6deg) brightness(1.04) contrast(.95); }
+  .bpc-map :global(.zone-label) {
+    background: rgba(255,255,255,.9); border: 0; border-radius: 10px; box-shadow: 0 8px 20px -10px rgba(16,37,47,.5);
+    color: #1B3A48; font-weight: 500; font-size: 14px; letter-spacing: -.01em; padding: 5px 10px;
+  }
+  .bpc-map :global(.zone-label::before) { display: none; }
+  .bpc-map :global(.leaflet-control-attribution) { background: rgba(255,255,255,.75); border-radius: 8px 0 0 0; font-size: 10px; }
+  .bpc-map :global(.leaflet-control-zoom a) { color: #1B3A48; }
+</style>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  type Zone = { name: string; center: [number, number]; radius: number; places: string[] };
+
+  document.querySelectorAll<HTMLElement>('.bpc-map .map-canvas').forEach((el) => {
+    const zones: Zone[] = JSON.parse(el.dataset.zones || '[]');
+    const touch = window.matchMedia('(pointer: coarse)').matches;
+    const map = L.map(el, {
+      scrollWheelZoom: false,
+      dragging: !touch, // let phones scroll the page past the map
+      zoomControl: !touch,
+      attributionControl: true,
+    });
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+    }).addTo(map);
+
+    // Bounds from coordinates (works before the map has a view)
+    const bounds = L.latLngBounds([]);
+    zones.forEach((z) => bounds.extend(L.latLng(z.center).toBounds(z.radius * 2)));
+    if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24] });
+    else map.setView([-8.73, 115.13], 11);
+
+    zones.forEach((z) => {
+      const circle = L.circle(z.center, {
+        radius: z.radius, color: '#3E7287', weight: 1.5, fillColor: '#4D869C', fillOpacity: 0.22,
+      }).addTo(map);
+      L.circleMarker(z.center, { radius: 5, color: '#fff', weight: 2, fillColor: '#1B3A48', fillOpacity: 1 })
+        .addTo(map)
+        .bindTooltip(z.name, { permanent: true, direction: 'right', offset: [10, 0], className: 'zone-label' });
+      circle.bindPopup(`<strong>${z.name}</strong><br>${z.places.join(', ')}`);
+    });
+
+    // Keep the view right when the card changes size
+    new ResizeObserver(() => { map.invalidateSize(); if (bounds.isValid()) map.fitBounds(bounds, { padding: [24, 24] }); }).observe(el);
+  });
+</script>

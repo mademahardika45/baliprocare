@@ -1,0 +1,60 @@
+---
+// Healix split banner: text panel · photo · brand + WhatsApp tiles
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logo from '../assets/brand/logo-mist.png';
+import { photo, alts } from '../lib/photos';
+import { waLink } from '../config';
+
+interface Props {
+  chip?: string;
+  title?: string;
+  tone2?: string;
+  text?: string;
+  image?: string;
+  primary?: 'quote' | 'whatsapp';
+}
+const {
+  chip = 'Peace of mind',
+  title = 'Ready to stop worrying',
+  tone2 = 'about your property?',
+  text = 'Tell us about your villa and we will reply within 24 hours with a plan and a price.',
+  image = 'garden-frangipani',
+  primary = 'quote',
+} = Astro.props;
+---
+<section class="wrap py-16 md:py-24">
+  <div class="grid overflow-hidden rounded-[var(--radius-card)] bg-white lg:min-h-[480px] lg:grid-cols-[1.45fr_1fr_0.85fr]" data-reveal>
+    <div class="flex flex-col p-6 sm:p-10">
+      <span class="chip self-start">{chip}</span>
+      <h2 class="title mt-6">{title} <span class="tone2">{tone2}</span></h2>
+      <div class="mt-auto pt-10">
+        <p class="max-w-md text-[17px] text-body">{text}</p>
+        <div class="mt-6 flex flex-wrap gap-2.5">
+          {primary === 'quote' ? (
+            <>
+              <a href="/quote" class="btn btn-dark btn-lg" data-track="quote_cta" data-label="banner">Tell Us About My Villa <Icon name="arrow" class="arrow" /></a>
+              <a href={waLink()} target="_blank" rel="noopener" class="btn btn-line btn-lg" data-track="whatsapp_click" data-label="banner"><Icon name="chat" />Chat on WhatsApp</a>
+            </>
+          ) : (
+            <>
+              <a href={waLink()} target="_blank" rel="noopener" class="btn btn-dark btn-lg" data-track="whatsapp_click" data-label="banner"><Icon name="chat" />Chat on WhatsApp</a>
+              <a href="/quote" class="btn btn-line btn-lg" data-track="quote_cta" data-label="banner">Request a Quote</a>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+    <div class="relative min-h-[260px]">
+      <Image src={photo(image)} alt={alts[image] ?? ''} widths={[500, 800]} sizes="(min-width:1024px) 28vw, 100vw" class="absolute inset-0 size-full object-cover" />
+    </div>
+    <div class="grid grid-cols-2 lg:grid-cols-1 lg:grid-rows-2">
+      <div class="grid aspect-square place-items-center bg-deep lg:aspect-auto">
+        <Image src={logo} alt="Bali Property Care" width={96} height={86} class="h-auto w-16 sm:w-20" />
+      </div>
+      <a href={waLink()} target="_blank" rel="noopener" class="group grid aspect-square place-items-center bg-mist text-deep transition hover:bg-sage/60 lg:aspect-auto" data-track="whatsapp_click" data-label="banner-tile">
+        <span class="flex items-center gap-2 text-lg font-medium tracking-tight sm:text-xl"><Icon name="arrow" class="size-5 transition group-hover:translate-x-1" />WhatsApp us</span>
+      </a>
+    </div>
+  </div>
+</section>

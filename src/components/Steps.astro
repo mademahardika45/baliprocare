@@ -1,0 +1,24 @@
+---
+import Icon from './Icon.astro';
+interface Props { detailed?: boolean }
+const { detailed = false } = Astro.props;
+const steps = [
+  { icon: 'clipboard', title: 'Tell us about your property', text: 'Send the short quote form or message us on WhatsApp.', more: 'Location, bedrooms, pool, garden and the services you need. Photos help us price faster.' },
+  { icon: 'pin', title: 'We visit and agree a plan', text: 'A short property visit, then a clear plan and price.', more: 'We walk the property with you or your manager, agree the schedule and confirm the final price.' },
+  { icon: 'users', title: 'Your team starts', text: 'The same crew, the same standard, every visit.', more: 'Your crew works from our checklists. If someone is sick, a backup is sent.' },
+  { icon: 'camera', title: 'You receive a photo report', text: 'Before and after photos on WhatsApp after each visit.', more: 'A short note flags anything that needs attention, so there are no surprises.' },
+];
+---
+<ol class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+  {steps.map((s, i) => (
+    <li class="card flex min-h-[260px] flex-col p-6" data-reveal={i}>
+      <div class="flex items-center justify-between">
+        <span class="text-[2.6rem] leading-none font-medium tracking-[-0.05em] text-soft">0{i + 1}</span>
+        <span class="grid size-11 place-items-center rounded-full bg-mist text-sea-deep"><Icon name={s.icon} /></span>
+      </div>
+      <h3 class="mt-auto pt-10 text-[1.35rem] leading-tight tracking-[-0.035em]">{s.title}</h3>
+      <p class="mt-2 text-[15px] text-muted">{s.text}</p>
+      {detailed && <p class="mt-3 border-t border-deep/10 pt-3 text-[15px] text-body">{s.more}</p>}
+    </li>
+  ))}
+</ol>

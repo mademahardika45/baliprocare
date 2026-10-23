@@ -1,0 +1,12 @@
+[
+  { "id": "housekeeping-visit", "order": 1, "group": "single", "name": "Housekeeping visit", "detail": "Regular cleaning and tidy.", "from": 225000 },
+  { "id": "pool-visit", "order": 2, "group": "single", "name": "Pool care visit", "detail": "Cleaning, water test and treatment, equipment check.", "from": 205000 },
+  { "id": "garden-visit", "order": 3, "group": "single", "name": "Garden care visit", "detail": "Lawn, plants, trimming and clean-up.", "from": 190000 },
+  { "id": "property-check", "order": 4, "group": "single", "name": "Property check", "detail": "Walk-through, report and photos.", "from": 80000 },
+  { "id": "deep-clean", "order": 5, "group": "oneoff", "name": "Deep clean", "detail": "Detailed top-to-bottom clean.", "from": 525000 },
+  { "id": "pre-arrival", "order": 6, "group": "oneoff", "name": "Pre-arrival preparation", "detail": "Villa ready before you or your guests arrive.", "from": 305000 },
+  { "id": "post-renovation", "order": 7, "group": "oneoff", "name": "Post-renovation clean", "detail": "Dust, paint and building residue removed.", "from": 870000 },
+  { "id": "pool-restoration", "order": 8, "group": "oneoff", "name": "Pool restoration", "detail": "Recovery of a green or cloudy pool.", "from": 935000 },
+  { "id": "garden-restoration", "order": 9, "group": "oneoff", "name": "Garden restoration", "detail": "Overgrown garden brought back under control.", "from": 525000 },
+  { "id": "repair-callout", "order": 10, "group": "oneoff", "name": "Small repair call-out", "detail": "Call-out fee. Materials charged extra.", "from": 135000, "fixed": true, "suffix": "+ materials" }
+]

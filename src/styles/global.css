@@ -1,0 +1,150 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter-tight";
+
+/* ── Design tokens: palette from COLOR.png + derived shades ── */
+@theme {
+  --font-sans: "Inter Tight Variable", "Inter Tight", system-ui, -apple-system, sans-serif;
+
+  --color-mist: #CDE8E5;     /* dominant soft background */
+  --color-ice: #EEF7FF;      /* page background */
+  --color-sage: #7AB2B2;     /* decorative only */
+  --color-sea: #4D869C;      /* accent, icons */
+  --color-sea-deep: #3E7287; /* links, small accent text */
+  --color-deep: #1B3A48;     /* headings, dark surfaces, primary button */
+  --color-night: #10252F;
+  --color-body: #3A5560;     /* body text */
+  --color-muted: #557079;
+  --color-soft: #6E8C96;     /* second tone in large headings */
+  --color-tbd: #FFF1CC;
+  --color-tbd-ink: #7A5200;
+
+  --radius-card: 1.5rem;
+  --tracking-display: -0.045em;
+  --tracking-title: -0.035em;
+
+  --animate-rise: rise .9s cubic-bezier(.2,.8,.2,1) both;
+  @keyframes rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+}
+
+@layer base {
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; overflow-x: clip; }
+  body {
+    @apply bg-ice font-sans text-body antialiased;
+    font-size: 16.5px; line-height: 1.55; letter-spacing: -0.006em; overflow-x: clip;
+  }
+  h1, h2, h3, h4 { @apply text-deep font-medium; letter-spacing: var(--tracking-title); text-wrap: balance; }
+  :focus-visible { outline: 2px solid var(--color-sea); outline-offset: 3px; border-radius: 10px; }
+  ::selection { background: var(--color-mist); color: var(--color-deep); }
+}
+
+@layer components {
+  /* Layout */
+  /* Full-width layout: content follows the screen, with a comfortable side gutter */
+  .wrap { @apply mx-auto w-full px-4 sm:px-6 lg:px-10 2xl:px-14; }
+  .section { @apply py-20 md:py-28; }
+
+  /* Type */
+  .display { font-size: clamp(2.6rem, 7.6vw, 6.2rem); line-height: .98; letter-spacing: var(--tracking-display); @apply font-medium text-deep; }
+  /* Home hero: as large as the screen allows */
+  .display-hero { font-size: min(calc((100vw - 2rem) / 7.9), 12rem); line-height: .95; letter-spacing: -0.05em; @apply font-medium text-deep; }
+  .display-hero > span { white-space: nowrap; }
+  @media (min-width: 640px) { .display-hero { font-size: min(calc((100vw - 3rem) / 8.4), 12rem); } }
+  @media (min-width: 1024px) { .display-hero { font-size: min(calc((100vw - 5rem) / 8.4), 14rem); } }
+  .title { font-size: clamp(2rem, 5.4vw, 3.75rem); line-height: 1.02; letter-spacing: var(--tracking-display); @apply font-medium text-deep; }
+  .statement { font-size: clamp(1.6rem, 3.9vw, 2.9rem); line-height: 1.12; letter-spacing: var(--tracking-title); @apply font-medium text-deep; }
+  .tone2 { @apply text-soft; }
+  .eyebrow { @apply text-sm font-medium text-muted; }
+  .lead { @apply text-lg leading-relaxed text-body md:text-xl; letter-spacing: -0.015em; }
+
+  /* Chips (Healix tags) */
+  .chip { @apply inline-flex items-center gap-1.5 rounded-lg bg-mist px-2.5 py-1 text-[13px] font-medium text-deep; }
+  .chip-white { @apply bg-white/80 backdrop-blur; }
+  .tbd { @apply inline-flex items-center rounded-md bg-tbd px-1.5 py-0.5 align-middle text-[11px] font-semibold uppercase tracking-wide text-tbd-ink; }
+
+  /* Buttons: compact pills */
+  .btn {
+    @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-full px-5 text-[15px] font-medium whitespace-nowrap transition duration-200 active:scale-[.97];
+    letter-spacing: -0.015em;
+  }
+  .btn svg { @apply size-[18px] shrink-0 transition-transform duration-300; }
+  .btn:hover svg.arrow { transform: translateX(3px); }
+  .btn-lg { @apply min-h-12 px-6 text-base; }
+  .btn-dark { @apply bg-deep text-white hover:bg-night; }
+  .btn-line { @apply text-deep ring-1 ring-deep ring-inset hover:bg-deep hover:text-white; }
+  .btn-white { @apply bg-white text-deep hover:bg-ice; }
+  /* Liquid glass pill (button.png) for photos and coloured cards */
+  .btn-glass {
+    @apply text-deep;
+    background: linear-gradient(115deg, rgba(255,255,255,.7) 0%, rgba(255,255,255,.28) 36%, rgba(255,255,255,.62) 48%, rgba(255,255,255,.24) 60%, rgba(255,255,255,.45) 100%);
+    background-size: 220% 100%; background-position: 100% 0;
+    -webkit-backdrop-filter: blur(14px) saturate(160%); backdrop-filter: blur(14px) saturate(160%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.65), inset 0 1px 1px rgba(255,255,255,.9), 0 6px 18px -8px rgba(16,37,47,.35);
+    transition: background-position .7s cubic-bezier(.2,.8,.2,1), transform .2s;
+  }
+  .btn-glass:hover { background-position: 0 0; }
+  .btn-circle { @apply inline-grid size-11 shrink-0 place-items-center rounded-full bg-white text-deep transition duration-300 hover:bg-deep hover:text-white; }
+  .btn-circle svg { @apply size-5; }
+
+  /* Glass surfaces */
+  .glass {
+    background: linear-gradient(135deg, rgba(255,255,255,.72), rgba(255,255,255,.38));
+    -webkit-backdrop-filter: blur(20px) saturate(170%); backdrop-filter: blur(20px) saturate(170%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.6), inset 0 1px 1px rgba(255,255,255,.85), 0 16px 36px -16px rgba(16,37,47,.28);
+  }
+  .glass-dark {
+    background: linear-gradient(150deg, rgba(255,255,255,.16), rgba(255,255,255,.05));
+    -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.18), inset 0 1px 1px rgba(255,255,255,.22);
+  }
+
+  /* Cards */
+  .card { @apply rounded-[var(--radius-card)] bg-white; }
+  .card-pastel { background: linear-gradient(160deg, var(--color-mist) 0%, #DDEFEE 45%, var(--color-ice) 100%); }
+
+  /* Round check bullets (Instagram style) */
+  .check { @apply inline-grid size-[18px] shrink-0 place-items-center rounded-full bg-sea text-white; }
+  .check svg { @apply size-[11px]; }
+
+  /* Inline photos inside headlines (Healix poster) */
+  .inline-photo {
+    display: inline-block; height: .74em; width: 1.4em; border-radius: .2em; overflow: hidden; vertical-align: -.06em; margin: 0 .04em;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.6), 0 8px 18px -10px rgba(16,37,47,.5);
+  }
+  .inline-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Form fields */
+  .field-label { @apply mb-1.5 block text-sm font-medium text-deep; }
+  .input {
+    @apply block min-h-12 w-full rounded-xl border border-deep/15 bg-white px-4 text-base text-deep transition placeholder:text-muted/60;
+    @apply focus:border-sea focus:ring-4 focus:ring-sea/15 focus:outline-none;
+  }
+  textarea.input { @apply min-h-28 py-3; }
+  select.input {
+    appearance: none; padding-right: 2.5rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%231B3A48' stroke-width='1.6'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 1rem center;
+  }
+  .input[aria-invalid="true"] { @apply border-red-500 ring-4 ring-red-500/10; }
+  .field-error { @apply mt-1.5 hidden text-sm text-red-700; }
+  .field-error.show { @apply block; }
+  .option {
+    @apply flex min-h-12 cursor-pointer items-center gap-3 rounded-xl border border-deep/15 bg-white px-4 text-[15px] text-deep transition select-none;
+    @apply has-[:checked]:border-sea has-[:checked]:bg-mist/60 has-[:focus-visible]:ring-4 has-[:focus-visible]:ring-sea/20;
+  }
+  .option input { @apply size-4 accent-[#3E7287]; }
+
+  /* Prose for legal pages */
+  .prose-bpc h2 { @apply mt-10 mb-3 text-2xl; }
+  .prose-bpc p, .prose-bpc li { @apply mb-3 text-body; }
+  .prose-bpc ul { @apply mb-4 list-disc pl-5; }
+  .prose-bpc a { @apply text-sea-deep underline underline-offset-2; }
+}
+
+/* Scroll reveal (progressive: content stays visible without JS) */
+.js [data-reveal] { opacity: 0; transform: translateY(22px); transition: opacity .9s cubic-bezier(.2,.8,.2,1), transform .9s cubic-bezier(.2,.8,.2,1); }
+.js [data-reveal].in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+}

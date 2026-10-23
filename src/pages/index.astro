@@ -1,0 +1,190 @@
+---
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import SectionHead from '../components/SectionHead.astro';
+import ServiceCard from '../components/ServiceCard.astro';
+import PackageCard from '../components/PackageCard.astro';
+import Steps from '../components/Steps.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import AreaMap from '../components/AreaMap.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+import HeroSlides from '../components/HeroSlides.astro';
+import BlurText from '../components/BlurText.astro';
+import ChatSim from '../components/ChatSim.astro';
+import { photo, alts } from '../lib/photos';
+import { waLink } from '../config';
+
+const services = (await getCollection('services')).sort((a, b) => a.data.order - b.data.order);
+const packages = (await getCollection('packages')).sort((a, b) => a.data.order - b.data.order);
+// Crops from the HOUSEKEEPERS folder: every face in the photo is kept (src/assets/photos/hk-*.jpg). Sample photos.
+const heroPeople = ['hk-0', 'hk-5', 'hk-2', 'hk-1', 'hk-7', 'hk-4', 'hk-3', 'hk-6'];
+const heroSlides = ['villa-pool', 'villa-suite', 'pool-garden', 'bedroom-timber', 'pool-cabana', 'garden-villa', 'pool-lush'];
+
+const trust = [
+  { icon: 'shield', text: 'Trusted hands, carefully vetted' },
+  { icon: 'camera', text: 'Proof after every visit' },
+  { icon: 'users', text: 'Always covered, never missed' },
+  { icon: 'chat', text: 'One contact, zero chasing' },
+];
+const why = [
+  { icon: 'sun', title: 'You enjoy the property', text: 'We take care of the rest, whether you live here or abroad.' },
+  { icon: 'users', title: 'Same crew, same standard', text: 'The same team visits every time and works from our checklists.' },
+  { icon: 'doc', title: 'Clear monthly pricing', text: 'One monthly price agreed upfront. No surprise bills.' },
+];
+---
+<Layout
+  title="Villa care in Uluwatu & Canggu"
+  description="Housekeeping, pool care, garden and general maintenance for villas, homes and businesses in Uluwatu and Canggu. Photo report after every visit."
+>
+  <!-- 1. Hero -->
+  <section class="relative isolate overflow-hidden">
+    <div class="absolute inset-0 -z-10 bg-[radial-gradient(60rem_30rem_at_50%_110%,#CDE8E5_0%,transparent_70%),radial-gradient(40rem_24rem_at_100%_0%,rgba(122,178,178,.22),transparent_70%)]"></div>
+    <div class="wrap pt-12 pb-14 text-center md:pt-24 md:pb-20">
+      <h1 class="display-hero mx-auto animate-rise [animation-delay:80ms]">
+        <span class="block">Your <HeroSlides names={heroSlides} /> property</span>
+        <span class="tone2 block">in good <HeroSlides names={heroPeople} offset={1400} width="1.6em" widthDesktop="2em" /> hands.</span>
+      </h1>
+      <div class="mt-10 flex animate-rise flex-col justify-center gap-2.5 [animation-delay:200ms] sm:flex-row md:mt-12">
+        <a href="/quote" class="btn btn-dark btn-lg" data-track="quote_cta" data-label="hero">Start in 90 Seconds <Icon name="arrow" class="arrow" /></a>
+        <a href={waLink()} target="_blank" rel="noopener" class="btn btn-line btn-lg" data-track="whatsapp_click" data-label="hero"><Icon name="chat" />Chat on WhatsApp</a>
+      </div>
+    </div>
+
+    <!-- 2. Trust strip -->
+    <div class="wrap pb-6">
+      <ul class="grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-card)] bg-deep/8 lg:grid-cols-4" data-reveal>
+        {trust.map((t) => (
+          <li class="flex items-center gap-2.5 bg-white px-3.5 py-4 text-[14px] leading-snug text-deep sm:gap-3 sm:px-5 sm:py-5 sm:text-[15px]">
+            <span class="grid size-9 shrink-0 place-items-center rounded-full bg-mist text-sea-deep sm:size-10"><Icon name={t.icon} /></span>{t.text}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- 3. Services -->
+  <section class="wrap section" id="services">
+    <SectionHead eyebrow="Services" title="Four services." tone2="One team." align="split">
+      Monthly packages or one-off jobs, built around your villa. Every property is different, so tell us what you need.
+    </SectionHead>
+    <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      {services.map((s, i) => <ServiceCard service={s} delay={i} />)}
+    </div>
+  </section>
+
+  <!-- 4. Why Bali Property Care -->
+  <section class="wrap pb-20 md:pb-28">
+    <BlurText
+      class="statement mx-auto max-w-4xl text-center"
+      lead="You enjoy the property."
+      rest="We take care of the rest, with the same crew every visit, a photo report you can check from anywhere and clear monthly pricing."
+    />
+    <div class="mt-14 grid gap-10 sm:grid-cols-3 sm:gap-6">
+      {why.map((w, i) => (
+        <div class="text-center" data-reveal={i}>
+          <span class="mx-auto grid size-12 place-items-center rounded-full glass text-sea-deep"><Icon name={w.icon} /></span>
+          <h3 class="mt-4 text-lg tracking-[-0.025em]">{w.title}</h3>
+          <p class="mx-auto mt-1 max-w-[17rem] text-[15px] text-muted">{w.text}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- 5. How it works -->
+  <section class="wrap pb-20 md:pb-28">
+    <SectionHead eyebrow="How it works" title="Four steps" tone2="to peace of mind." align="split">
+      <a href="/how-it-works" class="inline-flex items-center gap-2 font-medium text-deep hover:underline">See the full process <Icon name="arrow" class="size-4" /></a>
+    </SectionHead>
+    <Steps />
+  </section>
+
+  <!-- Photo reports: full-width photo section -->
+  <section class="wrap pb-20 md:pb-28">
+    <div class="relative isolate grid overflow-hidden rounded-[var(--radius-card)] bg-night " data-reveal>
+      <!-- Photo is mirrored so the person sits to the right of the text -->
+      <Image src={photo('anywhere')} alt={alts['anywhere']} widths={[900, 1600, 2000]} sizes="100vw" class="absolute inset-0 -z-20 size-full -scale-x-100 object-cover [object-position:40%_50%]" />
+      <div class="absolute inset-0 -z-10 bg-gradient-to-r from-night/85 via-night/45 to-night/10"></div>
+
+      <div class="flex flex-col p-6 text-white sm:p-10 lg:min-h-[640px] lg:p-14">
+        <span class="chip chip-white self-start">Photo reports</span>
+        <h2 class="title mt-6 max-w-xl text-ice">See every visit. <span class="text-mist/70">From anywhere.</span></h2>
+        <p class="mt-5 max-w-md text-lg text-mist/85">Before and after photos, plus a short note on anything that needs attention, sent on WhatsApp after each visit.</p>
+        <div class="mt-10 grid grid-cols-2 gap-3 lg:mt-auto lg:max-w-xl lg:pt-10">
+          {[
+            { icon: 'clock', t: 'We reply within 24 hours' },
+            { icon: 'chat', t: 'One English-speaking contact' },
+            { icon: 'camera', t: 'A photo report after every visit' },
+            { icon: 'users', t: 'A dedicated crew in each zone' },
+          ].map((c) => (
+            <div class="glass-dark flex min-h-32 flex-col justify-between rounded-2xl p-5">
+              <span class="grid size-10 place-items-center rounded-full bg-white/10 text-mist"><Icon name={c.icon} /></span>
+              <p class="mt-6 text-[1.15rem] leading-snug font-medium tracking-[-0.025em] text-white">{c.t}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Floating chat (no card): full-height column on the right on desktop; newest message sits at the bottom -->
+      <ChatSim class="px-6 pb-8 sm:px-10 lg:absolute lg:inset-y-0 lg:right-10 lg:w-[22rem] lg:max-w-none lg:px-0 lg:py-10 2xl:w-[26rem]" />
+    </div>
+  </section>
+
+  <!-- 6. Packages teaser -->
+  <section class="wrap pb-20 md:pb-28" id="packages">
+    <SectionHead eyebrow="Packages" title="Clear monthly pricing." tone2="No surprise bills." align="split">
+      Starting prices for a 1–2 bedroom villa. Final price depends on your property size.
+    </SectionHead>
+    <div class="grid gap-3 lg:grid-cols-3">
+      {packages.map((p, i) => <PackageCard pkg={p} delay={i} />)}
+    </div>
+    <div class="mt-6 flex flex-wrap items-center justify-between gap-3 text-[15px] text-muted">
+      <p>Need something different? We build custom plans.</p>
+      <a href="/packages" class="btn btn-white">Compare all packages <Icon name="arrow" class="arrow" /></a>
+    </div>
+  </section>
+
+  <!-- 7. Before and after -->
+  <section class="wrap pb-20 md:pb-28">
+    <SectionHead eyebrow="Before and after" title="The difference" tone2="a visit makes." align="split">
+      Drag the handle to compare. <span class="tbd ml-1">Foto contoh</span>
+    </SectionHead>
+    <div class="grid gap-3 md:grid-cols-3">
+      <div data-reveal="0"><BeforeAfter before="ba-pool-before" after="ba-pool-after" label="Pool" /></div>
+      <div data-reveal="1"><BeforeAfter before="ba-garden-before" after="ba-garden-after" label="Garden" /></div>
+      <div data-reveal="2"><BeforeAfter before="ba-bed-before" after="ba-bed-after" label="Bedroom" /></div>
+    </div>
+  </section>
+
+  <!-- 8. Areas and testimonials -->
+  <section class="wrap pb-6">
+    <div class="grid gap-3 lg:grid-cols-[1fr_1.1fr]">
+      <div class="card flex flex-col p-6 sm:p-8" data-reveal>
+        <p class="eyebrow">Service areas</p>
+        <h2 class="mt-2 text-[2rem] leading-tight tracking-[-0.045em]">Uluwatu and Canggu. <span class="tone2">Two zones, two crews.</span></h2>
+        <AreaMap class="mt-6" />
+        <a href="/areas" class="btn btn-line mt-6 self-start">See the areas we cover <Icon name="arrow" class="arrow" /></a>
+      </div>
+      <div class="grid gap-3">
+        {[{ img: 'villa-suite', area: 'Uluwatu' }, { img: 'pool-lush', area: 'Canggu' }].map((tm, i) => (
+          <figure class="card grid overflow-hidden sm:grid-cols-[180px_1fr]" data-reveal={i}>
+            <div class="relative h-40 sm:h-auto">
+              <Image src={photo(tm.img)} alt={alts[tm.img] ?? ''} widths={[300, 500]} sizes="(min-width:640px) 180px, 100vw" class="absolute inset-0 size-full object-cover" />
+            </div>
+            <div class="flex flex-col justify-between p-6 sm:p-7">
+              <div class="flex justify-end"><span class="tbd">Hanya contoh · ganti dengan review asli</span></div>
+              <blockquote class="mt-4 text-[1.3rem] leading-snug tracking-[-0.03em] text-soft">
+                “Contoh testimoni: kutipan singkat dari klien pertama, dipakai dengan izin mereka.”
+              </blockquote>
+              <figcaption class="mt-5 text-sm text-muted">Nama depan · Tipe villa · {tm.area}</figcaption>
+            </div>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Final call to action -->
+  <CtaBanner text="We reply within 24 hours. Tell us about your villa and we'll send a plan and a price." />
+</Layout>

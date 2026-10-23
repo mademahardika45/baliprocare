@@ -1,0 +1,53 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import FaqList from '../components/FaqList.astro';
+import CtaBanner from '../components/CtaBanner.astro';
+
+const faqs = (await getCollection('faqs')).sort((a, b) => a.data.order - b.data.order);
+const topics = [...new Set(faqs.map((f) => f.data.topic))];
+const slug = (t: string) => t.toLowerCase().replace(/[^a-z]+/g, '-');
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((f) => ({ '@type': 'Question', name: f.data.q, acceptedAnswer: { '@type': 'Answer', text: f.data.a } })),
+};
+---
+<Layout
+  title="FAQ"
+  description="Answers about keys and security, staff, pricing, payment, service areas and getting started with Bali Property Care."
+  jsonLd={jsonLd}
+>
+  <PageHero
+    eyebrow="FAQ"
+    title="Questions owners ask."
+    tone2="Straight answers."
+    text="Keys, staff, pricing and how to start. If your question isn't here, message us on WhatsApp."
+    cta="whatsapp"
+    crumbs={[{ href: '/faq', label: 'FAQ' }]}
+  />
+
+  <section class="wrap pb-6">
+    <div class="grid gap-10 lg:grid-cols-[240px_1fr] lg:gap-16">
+      <nav aria-label="FAQ topics" class="lg:sticky lg:top-28 lg:self-start">
+        <ul class="flex gap-2 overflow-x-auto pb-2 lg:flex-col lg:overflow-visible">
+          {topics.map((t) => (
+            <li><a href={`#${slug(t)}`} class="block rounded-full bg-white px-4 py-2 text-[15px] whitespace-nowrap text-deep transition hover:bg-mist">{t}</a></li>
+          ))}
+        </ul>
+      </nav>
+      <div class="grid gap-14">
+        {topics.map((t) => (
+          <section id={slug(t)} class="scroll-mt-28" data-reveal>
+            <h2 class="mb-4 text-2xl tracking-[-0.035em]">{t}</h2>
+            <FaqList items={faqs.filter((f) => f.data.topic === t).map((f) => f.data)} />
+          </section>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <CtaBanner chip="Still have questions?" title="Ask us anything" tone2="on WhatsApp." primary="whatsapp" image="towels-bench" text="One English-speaking contact. We reply within 24 hours." />
+</Layout>

@@ -1,0 +1,18 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Icon from '../../components/Icon.astro';
+import { waLink } from '../../config';
+---
+<Layout title="Thank you" description="We've received your quote request." noindex>
+  <section class="wrap py-20 md:py-32">
+    <div class="card-pastel mx-auto max-w-3xl rounded-[var(--radius-card)] p-8 text-center sm:p-14">
+      <span class="mx-auto grid size-16 place-items-center rounded-full glass text-sea-deep"><Icon name="check" class="size-7" /></span>
+      <h1 class="title mt-8">Thank you, <span class="tone2">we've received your request.</span></h1>
+      <p class="lead mx-auto mt-5 max-w-md">We'll reply on WhatsApp within 24 hours. A copy of your answers is on its way to your email.</p>
+      <div class="mt-8 flex flex-col justify-center gap-2.5 sm:flex-row">
+        <a href={waLink("Hi Bali Property Care, I've just sent a quote request and have an urgent question.")} target="_blank" rel="noopener" class="btn btn-dark btn-lg" data-track="whatsapp_click" data-label="thank-you"><Icon name="chat" />Urgent? Chat on WhatsApp</a>
+        <a href="/" class="btn btn-line btn-lg">Back to home</a>
+      </div>
+    </div>
+  </section>
+</Layout>

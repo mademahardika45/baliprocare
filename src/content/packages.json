@@ -1,0 +1,31 @@
+[
+  {
+    "id": "care-basic",
+    "order": 1,
+    "name": "Care Basic",
+    "bestFor": "For owners who are away",
+    "from": 2000000,
+    "unit": "month",
+    "includes": ["Pool care weekly", "Garden care weekly", "Weekly property check", "Photo report every visit"]
+  },
+  {
+    "id": "care-plus",
+    "order": 2,
+    "name": "Care Plus",
+    "bestFor": "For a fully managed property",
+    "from": 4650000,
+    "unit": "month",
+    "includes": ["Everything in Care Basic", "Pool care twice a week", "Housekeeping twice a week", "Photo report every visit"],
+    "featured": true
+  },
+  {
+    "id": "rental-ready",
+    "order": 3,
+    "name": "Rental Ready",
+    "bestFor": "For Airbnb hosts and managers",
+    "from": 430000,
+    "unit": "turnover",
+    "includes": ["Clean after every check-out", "Linen change", "Restocking basics", "Arrival check"],
+    "note": "Pool and garden at single-visit prices."
+  }
+]

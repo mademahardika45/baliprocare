@@ -1,0 +1,153 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { site, waLink } from '../config';
+---
+<Layout
+  title="Contact"
+  description="Chat with Bali Property Care on WhatsApp, send a message or follow us on Instagram. We reply within 24 hours."
+>
+  <PageHero
+    eyebrow="Contact"
+    title="Talk to a person."
+    tone2="Not a call centre."
+    text="WhatsApp is the fastest way to reach us. We reply within 24 hours."
+    cta="whatsapp"
+    crumbs={[{ href: '/contact', label: 'Contact' }]}
+  />
+
+  <section class="wrap pb-6">
+    <div class="grid gap-3 lg:grid-cols-[1fr_1.15fr]">
+      <div class="grid gap-3">
+        <a href={waLink()} target="_blank" rel="noopener" class="group flex flex-col rounded-[var(--radius-card)] bg-deep p-6 text-white sm:p-8" data-track="whatsapp_click" data-label="contact-card">
+          <span class="grid size-12 place-items-center rounded-full bg-white/10"><Icon name="chat" class="size-6" /></span>
+          <p class="mt-10 text-sm text-mist/70">WhatsApp</p>
+          <p class="text-3xl font-medium tracking-[-0.045em]">{site.whatsappDisplay}</p>
+          <span class="btn btn-glass mt-6 self-start">Start a chat <Icon name="arrow" class="arrow" /></span>
+        </a>
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="card p-6">
+            <Icon name="mail" class="size-5 text-sea-deep" />
+            <p class="mt-6 text-sm text-muted">Email</p>
+            {site.email
+              ? <a href={`mailto:${site.email}`} class="font-medium text-deep hover:underline">{site.email}</a>
+              : null}
+          </div>
+          <a href={site.instagramUrl} target="_blank" rel="noopener" class="card p-6 transition hover:bg-mist/50">
+            <Icon name="instagram" class="size-5 text-sea-deep" />
+            <p class="mt-6 text-sm text-muted">Instagram</p>
+            <p class="font-medium text-deep">{site.instagramHandle}</p>
+          </a>
+          <div class="card p-6">
+            <Icon name="clock" class="size-5 text-sea-deep" />
+            <p class="mt-6 text-sm text-muted">Business hours</p>
+            <p class="font-medium text-deep">{site.hours}</p>
+            <p class="text-sm text-muted">{site.timezone}</p>
+            <p class="mt-1 text-sm text-muted">We reply within 24 hours.</p>
+          </div>
+          <div class="card p-6">
+            <Icon name="pin" class="size-5 text-sea-deep" />
+            <p class="mt-6 text-sm text-muted">Service zones</p>
+            <p class="font-medium text-deep">Uluwatu · Canggu</p>
+            <a href="/areas" class="mt-1 inline-block text-sm text-sea-deep underline underline-offset-2">See areas</a>
+          </div>
+        </div>
+        <div class="card-pastel flex gap-4 rounded-[var(--radius-card)] p-6">
+          <Icon name="alert" class="mt-0.5 size-5 shrink-0 text-sea-deep" />
+          <div>
+            <p class="font-medium text-deep">Existing clients: urgent issue?</p>
+            <p class="mt-1 text-[15px] text-body">Message your duty contact on WhatsApp and mark it URGENT. <span class="tbd ml-1">Kontak darurat belum final</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card p-6 sm:p-10">
+        <h2 class="text-[2rem] leading-tight tracking-[-0.045em]">Send a message</h2>
+        <p class="mt-2 text-muted">For a price, the <a href="/quote" class="text-sea-deep underline underline-offset-2">quote form</a> is faster.</p>
+
+        <div id="contact-ok" hidden class="mt-8 rounded-2xl bg-mist p-6">
+          <p class="text-xl font-medium tracking-tight text-deep">Thank you, your message is in.</p>
+          <p class="mt-1 text-body">We'll reply within 24 hours.</p>
+        </div>
+
+        <form id="contact-form" action="/api/contact" method="post" class="mt-8 grid gap-5" novalidate>
+          <div>
+            <label for="c-name" class="field-label">Name</label>
+            <input id="c-name" name="name" required autocomplete="name" class="input" aria-describedby="c-name-err" />
+            <p id="c-name-err" class="field-error">Please enter your name.</p>
+          </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="c-wa" class="field-label">WhatsApp number</label>
+              <input id="c-wa" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="+62 812 3456 7890" class="input" aria-describedby="c-contact-err" />
+            </div>
+            <div>
+              <label for="c-email" class="field-label">Email</label>
+              <input id="c-email" name="email" type="email" autocomplete="email" class="input" aria-describedby="c-contact-err" />
+            </div>
+          </div>
+          <p id="c-contact-err" class="field-error -mt-3">Please add a WhatsApp number or a valid email.</p>
+          <div>
+            <label for="c-msg" class="field-label">Message</label>
+            <textarea id="c-msg" name="message" required class="input" aria-describedby="c-msg-err"></textarea>
+            <p id="c-msg-err" class="field-error">Please write a short message.</p>
+          </div>
+          <div class="hidden" aria-hidden="true"><label>Company website <input name="company_website" tabindex="-1" autocomplete="off" /></label></div>
+          <input type="hidden" name="started" value="" />
+          <label class="flex items-start gap-3 text-[15px] text-body">
+            <input type="checkbox" name="consent" value="yes" required class="mt-1 size-4 accent-[#3E7287]" aria-describedby="c-consent-err" />
+            <span>I agree to be contacted about my inquiry. See our <a href="/privacy" class="text-sea-deep underline underline-offset-2">Privacy Policy</a>.</span>
+          </label>
+          <p id="c-consent-err" class="field-error -mt-3">Please tick this box so we can reply.</p>
+          <p id="c-error" class="field-error" role="alert"></p>
+          <button class="btn btn-dark btn-lg justify-self-start" type="submit">Send message <Icon name="arrow" class="arrow" /></button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const form = document.getElementById('contact-form') as HTMLFormElement;
+  const ok = document.getElementById('contact-ok')!;
+  (form.elements.namedItem('started') as HTMLInputElement).value = String(Date.now());
+  if (new URLSearchParams(location.search).get('sent') === '1') { form.hidden = true; ok.hidden = false; }
+
+  const show = (id: string, on: boolean, input?: Element | null) => {
+    document.getElementById(id)!.classList.toggle('show', on);
+    input?.setAttribute('aria-invalid', String(on));
+  };
+  function validate() {
+    const f = form.elements;
+    const name = f.namedItem('name') as HTMLInputElement;
+    const wa = f.namedItem('whatsapp') as HTMLInputElement;
+    const email = f.namedItem('email') as HTMLInputElement;
+    const msg = f.namedItem('message') as HTMLTextAreaElement;
+    const consent = f.namedItem('consent') as HTMLInputElement;
+    const e1 = !name.value.trim(); show('c-name-err', e1, name);
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+    const waOk = wa.value.replace(/\D/g, '').length >= 8;
+    const e2 = !(emailOk || waOk); show('c-contact-err', e2, wa); email.setAttribute('aria-invalid', String(e2));
+    const e3 = msg.value.trim().length < 5; show('c-msg-err', e3, msg);
+    const e4 = !consent.checked; show('c-consent-err', e4, consent);
+    return !(e1 || e2 || e3 || e4);
+  }
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!validate()) { (form.querySelector('[aria-invalid="true"]') as HTMLElement)?.focus(); return; }
+    const btn = form.querySelector('button[type=submit]') as HTMLButtonElement;
+    btn.disabled = true;
+    try {
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { accept: 'application/json' } });
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Something went wrong.');
+      window.bpcTrack?.('contact_submitted');
+      form.hidden = true; ok.hidden = false;
+    } catch (err) {
+      const el = document.getElementById('c-error')!;
+      el.textContent = (err as Error).message + ' You can also message us on WhatsApp.'; el.classList.add('show');
+      btn.disabled = false;
+    }
+  });
+</script>

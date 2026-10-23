@@ -1,0 +1,54 @@
+---
+// Glass mock-up of the WhatsApp message an owner receives after a visit (sample content).
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import logo from '../assets/brand/logo-mist.png';
+import { photo } from '../lib/photos';
+
+interface Props {
+  title: string; // what was done, shown as the first line
+  note: string; // short message text
+  photos: [string, string];
+  attention?: string; // optional "needs attention" line
+  time?: string;
+  class?: string;
+}
+const { title, note, photos, attention, time = '10:12', class: cls = '' } = Astro.props;
+---
+<article class:list={['glass overflow-hidden rounded-[1.6rem]', cls]} aria-label="Example WhatsApp visit report">
+  <header class="flex items-center gap-3 border-b border-deep/10 bg-white/40 px-4 py-3">
+    <span class="grid size-10 place-items-center rounded-full bg-deep"><Image src={logo} alt="" width={32} class="h-auto w-5" /></span>
+    <span class="min-w-0 leading-tight">
+      <span class="block truncate font-medium text-deep">Bali Property Care</span>
+      <span class="text-xs text-muted">Your contact · online</span>
+    </span>
+    <span class="ml-auto rounded-full bg-deep/8 px-2 py-0.5 text-[10px] tracking-[0.08em] text-deep uppercase">Contoh</span>
+  </header>
+
+  <div class="grid gap-2 p-4">
+    <div class="max-w-[88%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 shadow-sm">
+      <p class="text-[15px] leading-snug font-medium text-deep">{title}</p>
+      <p class="mt-1 text-[14px] leading-snug text-body">{note}</p>
+    </div>
+
+    <div class="max-w-[88%] rounded-2xl rounded-tl-md bg-white p-1.5 shadow-sm">
+      <div class="grid grid-cols-2 gap-1">
+        {photos.map((p, i) => (
+          <figure class="relative overflow-hidden rounded-xl">
+            <Image src={photo(p)} alt="" widths={[240, 400]} sizes="180px" class="aspect-[4/5] w-full object-cover" />
+            <span class="chip chip-white absolute top-1.5 left-1.5 !px-1.5 !py-0.5 text-[11px]">{i === 0 ? 'Before' : 'After'}</span>
+          </figure>
+        ))}
+      </div>
+    </div>
+
+    {attention && (
+      <div class="max-w-[88%] rounded-2xl rounded-tl-md bg-white px-3.5 py-2.5 shadow-sm">
+        <p class="flex items-center gap-1.5 text-xs font-medium text-sea-deep"><Icon name="alert" class="size-3.5" />Needs your attention</p>
+        <p class="mt-1 text-[14px] leading-snug text-body">{attention}</p>
+      </div>
+    )}
+
+    <p class="mt-1 flex items-center justify-end gap-1.5 text-xs font-medium text-muted">{time}<Icon name="sent" class="size-4 text-sea" /></p>
+  </div>
+</article>

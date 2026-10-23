@@ -1,0 +1,57 @@
+---
+// Large statement whose words blur in one by one while scrolling.
+// Fully revealed by the time the block reaches the middle of the screen, so nothing appears after it has scrolled past.
+interface Props { lead: string; rest?: string; class?: string }
+const { lead, rest = '', class: cls = '' } = Astro.props;
+const words = (t: string) => t.split(/\s+/).filter(Boolean);
+const a = words(lead);
+const b = words(rest);
+---
+<p class:list={['blur-scroll', cls]} aria-label={`${lead} ${rest}`.trim()}>
+  {a.map((w) => <span class="bw" aria-hidden="true">{w}</span>)}{' '}
+  {b.map((w) => <span class="bw tone2" aria-hidden="true">{w}</span>)}
+</p>
+
+<style is:global>
+  .blur-scroll .bw { display: inline-block; margin-right: .26em; }
+  .js .blur-scroll .bw {
+    --p: 0;
+    opacity: var(--p);
+    filter: blur(calc((1 - var(--p)) * 14px));
+    transform: translateY(calc((1 - var(--p)) * .35em));
+    will-change: opacity, filter, transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .blur-scroll .bw { opacity: 1; filter: none; transform: none; }
+  }
+</style>
+
+<script>
+  const blocks = [...document.querySelectorAll<HTMLElement>('.blur-scroll')];
+  if (blocks.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const items = blocks.map((el) => ({ el, words: [...el.querySelectorAll<HTMLElement>('.bw')] }));
+    const clamp = (n: number) => Math.min(1, Math.max(0, n));
+    let queued = false;
+
+    const update = () => {
+      queued = false;
+      const vh = window.innerHeight;
+      for (const { el, words } of items) {
+        const top = el.getBoundingClientRect().top;
+        // 0 when the block's top is at 92% of the screen, 1 when it reaches 48%
+        const progress = clamp((vh * 0.92 - top) / (vh * 0.44));
+        const n = words.length;
+        const span = 0.3; // each word fades over 30% of the progress range
+        words.forEach((w, i) => {
+          const start = (i / n) * (1 - span);
+          w.style.setProperty('--p', String(clamp((progress - start) / span)));
+        });
+      }
+    };
+    const request = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+    update();
+  }
+</script>
